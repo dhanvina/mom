@@ -9,7 +9,7 @@ This project is an AI-powered Minutes of Meeting (MoM) generator that leverages 
 ## Features
 - **Automated MoM Extraction:** Generate structured MoM documents from meeting transcripts using AI.
 - **Standardized Output:** Consistent sections: Meeting Title, Date & Time, Attendees, Agenda, Key Discussion Points, Action Items, Decisions Made, Next Steps.
-- **Flexible Input/Output:** Supports various transcript formats and outputs (text, JSON, HTML).
+- **Flexible Input/Output:** Supports .txt, .doc, .mp3
 - **Extensible OOP Design:** Modular classes for easy extension and testing.
 - **CLI Interface:** Simple command-line interface for ease of use.
 
