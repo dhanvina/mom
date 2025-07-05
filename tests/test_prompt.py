@@ -4,7 +4,7 @@ from langchain.prompts import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
-from prompt.prompt_template import PromptManager
+from app.prompt.prompt_template import PromptManager
 
 
 class TestPromptManager:
