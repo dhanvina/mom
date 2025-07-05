@@ -3,3 +3,6 @@ typing
 streamlit
 docx
 logging
+langchain
+langchain_community
+pytest
