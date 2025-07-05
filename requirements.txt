@@ -1,2 +1,5 @@
 ollama
 typing
+streamlit
+docx
+logging
