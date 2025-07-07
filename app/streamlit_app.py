@@ -35,6 +35,34 @@ elif not uploaded_file and not transcript_text:
     st.sidebar.error("Please provide either a file upload or manual text input to generate MoM.")
     st.stop()
 
+lower_text = transcript_text.lower()
+location = ""
+date = ""
+time = ""
+
+missing_fields = []
+
+if "location" not in lower_text:
+    location = st.sidebar.text_input("Enter Meeting Location", placeholder="e.g., Zoom / HQ")
+    if not location:
+        missing_fields.append("location")
+
+if "date" not in lower_text:
+    date_input = st.sidebar.date_input("Enter Meeting Date")
+    date = date_input.strftime("%Y-%m-%d") if date_input else ""
+    if not date:
+        missing_fields.append("date")
+
+if "time" not in lower_text:
+    time = st.sidebar.text_input("Enter Meeting Time", placeholder="e.g., 10:00 AM")
+    if not time:
+        missing_fields.append("time")
+
+# Only show generate button when transcript and all required info are present
+if missing_fields:
+    st.warning(f"Please provide missing information: {', '.join(missing_fields)}")
+    st.stop()
+
 # Setup the MoM generator
 if st.button("Generate Minutes of Meeting"):
     with st.spinner("Setting up the model..."):
@@ -43,7 +71,16 @@ if st.button("Generate Minutes of Meeting"):
             st.error(msg)
         else:
             try:
-                result = mom_generator.generate_mom(transcript_text)
+                metadata =""
+                if location:
+                    metadata += f"\nLocation: {location}"
+                if date:
+                    metadata += f"\nDate: {date}"
+                if time:
+                    metadata += f"\nTime: {time}"
+
+                final_text = metadata + "\n" + transcript_text
+                result = mom_generator.generate_mom(final_text)
                 st.success("Minutes of Meeting generated successfully!")
                 st.subheader("Structured:")
                 st.markdown(result)
@@ -54,9 +91,6 @@ if st.button("Generate Minutes of Meeting"):
                     file_name="minutes_of_meeting.txt",
                     mime="text/plain"
                 )
-
-                st.subheader("Raw Transcript:")
-                st.markdown(transcript_text)        
             except RuntimeError as e:
                 st.error(f"Error generating MoM: {e}")
                 st.stop()

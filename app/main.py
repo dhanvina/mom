@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class MoMGenerator:
     def __init__(self, model_name="llama3"):
         self.model_name = model_name
-        self.prompt = PromptManager()
+        self.prompt_manager = PromptManager()
         self.ollama_manager = OllamaManager(model_name)
 
     def setup(self) -> tuple[bool, str]:
