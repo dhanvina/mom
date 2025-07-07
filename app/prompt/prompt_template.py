@@ -16,20 +16,22 @@ Instructions:
 - If any expected field is missing in the input, return an empty string "" or empty list [] for that field.
 - Do NOT hallucinate or assume details not explicitly mentioned in the transcript.
 
+
+Your output MUST strictly follow this Markdown format using triple dashes (`---`) at the start and end:
 Return the result in valid PDF format with the following keys:
 ---
-Meeting Title: <title>
-Date & Time: <date and time>
-Attendees: <people or roles>
-Agenda: <summarized agenda if long>
-Discussion Summary: <brief overview>
-Key Decisions: <decisions made>
-Action Items:
-- <task 1> – Owner
-- <task 2> – Owner
+Meeting Title: <title>  
+Date & Time: <date and time>  
+Attendees: <people or roles>  
+Agenda: <summarized agenda if long>  
+Discussion Summary: <brief overview>  
+Key Decisions: <decisions made>  
+Action Items:  
+- <task 1> – Owner  
+- <task 2> – Owner  
 
-Conclusion: <wrap-up or next steps>
-Additional Notes: <any extra observations or metadata>
+Conclusion: <wrap-up or next steps>  
+Additional Notes: <any extra observations or metadata>  
 ---
 """
 
