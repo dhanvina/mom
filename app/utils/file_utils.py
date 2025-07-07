@@ -87,7 +87,7 @@ class FileHandler:
                 return uploaded_file.getvalue().decode("utf-8")
             elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
                 logger.debug("Processing word document")
-                doc = docx.Document(io.BytesIO(uploaded_file.get_value()))
+                doc = docx.Document(io.BytesIO(uploaded_file.getvalue()))
                 return "\n".join([paragraph.text for paragraph in doc.paragraphs])
             else:
                 error_msg = f"Unsupported file type: {uploaded_file.type}"
@@ -120,7 +120,7 @@ class FileHandler:
             return st.text_area(
                 "or paste your transcript here:",
                 height=300,
-                placeholder="Paste your meeting transcript here ...."
+                placeholder="Paste your meeting transcript here ....",
                 help = "Enter or paste meeting transcript text directly"
             )
         except Exception as e:
@@ -143,7 +143,7 @@ class FileHandler:
         return {"name": uploaded_file.name,
                 "type": uploaded_file.type,
                 "size": uploaded_file.size,
-                "size_mb": round(uploaded_file/(1024*1024),2)
+                "size_mb": round(uploaded_file.size /(1024*1024),2)
                 }
 
 
