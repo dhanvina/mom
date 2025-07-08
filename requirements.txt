@@ -1,7 +1,7 @@
 ollama
 typing
 streamlit
-docx
+python-docx
 logging
 langchain
 langchain_community

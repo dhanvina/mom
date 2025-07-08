@@ -71,7 +71,7 @@ if st.button("Generate Minutes of Meeting"):
             st.error(msg)
         else:
             try:
-                metadata =""
+                metadata = ""
                 if location:
                     metadata += f"\nLocation: {location}"
                 if date:
@@ -80,14 +80,16 @@ if st.button("Generate Minutes of Meeting"):
                     metadata += f"\nTime: {time}"
 
                 final_text = metadata + "\n" + transcript_text
-                result = mom_generator.generate_mom(final_text)
+                mom_data = mom_generator.generate_mom(final_text)
+
+                # Display the raw text output from LLM
                 st.success("Minutes of Meeting generated successfully!")
-                st.subheader("Structured:")
-                st.markdown(result)
+                st.subheader("Generated MoM:")
+                st.markdown(mom_data)
 
                 st.download_button(
                     label="Download Now!",
-                    data=result,
+                    data=mom_data,
                     file_name="minutes_of_meeting.txt",
                     mime="text/plain"
                 )
@@ -96,6 +98,3 @@ if st.button("Generate Minutes of Meeting"):
                 st.stop()
             except Exception as e:
                 st.error(f"Failed {e}")
-            else:
-                st.info("please upload or paste the transcript text to generate MoM.")
-
