@@ -16,23 +16,22 @@ mom_generator = MoMGenerator()
 # file upload and input section
 st.sidebar.header("Upload Transcript")
 uploaded_file = file_handler.upload_file()
+transcript_text = file_handler.text_input_area()
+
+# Validate input cases
+if uploaded_file and transcript_text:
+    st.sidebar.warning("Please provide *either* a file OR manual text input, not both.")
+    st.stop()
+
 if uploaded_file:
     st.sidebar.success(f"File '{uploaded_file.name}' uploaded successfully.")
-else:
-    st.sidebar.warning("Please upload a transcript file (.txt or .docx).")
-
-# manual text input section
-transcript_text = file_handler.text_input_area()
-if transcript_text:
-    st.sidebar.success("Text input received.")
-else:
-    st.sidebar.warning("Please enter the transcript text manually.")
-# Combine uploaded file content and manual text input
-if uploaded_file and transcript_text:   
-    st.sidebar.info("Both file upload and manual text input are provided. Using file content.")
     transcript_text = file_handler.read_file_content(uploaded_file)
-elif not uploaded_file and not transcript_text:
-    st.sidebar.error("Please provide either a file upload or manual text input to generate MoM.")
+
+elif transcript_text:
+    st.sidebar.success("Manual transcript text received.")
+
+else:
+    st.sidebar.error("Please provide either a file upload or manual transcript input.")
     st.stop()
 
 lower_text = transcript_text.lower()

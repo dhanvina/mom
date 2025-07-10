@@ -50,17 +50,16 @@ class FileHandler:
         try:
             uploaded_file = st.file_uploader(
                 "Upload a transcript file",
-                type = self.supported_file_types,
-                help = "Upload a .txt or .docx file containing meeting transcript"
+                type=self.supported_file_types,
+                help="Upload a .txt or .docx file containing meeting transcript"
             )
 
             if uploaded_file is not None:
                 logger.info(f"File uploaded: {uploaded_file.name} and {uploaded_file.type}")
-                return self.read_file_content(uploaded_file)
+                return uploaded_file  # ✅ return the file object
             else:
-                logger.debug("No file uploaded")
                 return None
-            
+
         except Exception as e:
             logger.error(f"Error in the file uploaded: {e}")
             st.error(f"Error handling file upload : {e}")
