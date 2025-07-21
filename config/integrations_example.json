@@ -1,0 +1,121 @@
+{
+  "integrations": {
+    "task_management": {
+      "asana": {
+        "type": "asana",
+        "auth_method": "api_key",
+        "credentials": {
+          "api_key": "your_asana_api_key_here"
+        },
+        "settings": {
+          "base_url": "https://app.asana.com/api/1.0",
+          "default_project": "project_id_here"
+        },
+        "enabled": true
+      },
+      "trello": {
+        "type": "trello",
+        "auth_method": "api_key",
+        "credentials": {
+          "api_key": "your_trello_api_key",
+          "token": "your_trello_token"
+        },
+        "settings": {
+          "base_url": "https://api.trello.com/1",
+          "default_project": "list_id_here"
+        },
+        "enabled": false
+      },
+      "jira": {
+        "type": "jira",
+        "auth_method": "basic_auth",
+        "credentials": {
+          "username": "your_jira_username",
+          "password": "your_jira_api_token"
+        },
+        "settings": {
+          "base_url": "https://your-domain.atlassian.net/rest/api/2",
+          "default_project": "PROJECT_KEY"
+        },
+        "enabled": false
+      }
+    },
+    "calendar": {
+      "google_calendar": {
+        "type": "google",
+        "auth_method": "oauth2",
+        "credentials": {
+          "access_token": "your_google_access_token",
+          "refresh_token": "your_google_refresh_token",
+          "client_id": "your_google_client_id",
+          "client_secret": "your_google_client_secret"
+        },
+        "settings": {
+          "base_url": "https://www.googleapis.com/calendar/v3",
+          "default_calendar": "primary"
+        },
+        "enabled": false
+      },
+      "outlook_calendar": {
+        "type": "outlook",
+        "auth_method": "oauth2",
+        "credentials": {
+          "access_token": "your_outlook_access_token",
+          "refresh_token": "your_outlook_refresh_token",
+          "client_id": "your_outlook_client_id",
+          "client_secret": "your_outlook_client_secret"
+        },
+        "settings": {
+          "base_url": "https://graph.microsoft.com/v1.0/me",
+          "default_calendar": "calendar"
+        },
+        "enabled": false
+      }
+    },
+    "email": {
+      "smtp_email": {
+        "type": "smtp",
+        "auth_method": "basic_auth",
+        "credentials": {
+          "username": "your_email@example.com",
+          "password": "your_email_password"
+        },
+        "settings": {
+          "smtp_server": "smtp.gmail.com",
+          "smtp_port": 587,
+          "use_tls": true,
+          "sender_email": "your_email@example.com",
+          "sender_name": "Meeting Minutes Bot",
+          "templates": {
+            "default": {
+              "subject": "Meeting Minutes - {meeting_title}",
+              "body": "Please find the meeting minutes below:\n\n{mom_content}",
+              "variables": ["meeting_title", "mom_content"]
+            },
+            "formal": {
+              "subject": "Official Meeting Minutes - {meeting_title} - {meeting_date}",
+              "body": "Dear Team,\n\nPlease find attached the official minutes from our meeting.\n\nMeeting: {meeting_title}\nDate: {meeting_date}\nAttendees: {attendees}\n\n{mom_content}\n\nBest regards,\nMeeting Minutes System",
+              "variables": ["meeting_title", "meeting_date", "attendees", "mom_content"]
+            }
+          }
+        },
+        "enabled": true
+      },
+      "gmail": {
+        "type": "gmail",
+        "auth_method": "oauth2",
+        "credentials": {
+          "access_token": "your_gmail_access_token",
+          "refresh_token": "your_gmail_refresh_token",
+          "client_id": "your_gmail_client_id",
+          "client_secret": "your_gmail_client_secret"
+        },
+        "settings": {
+          "sender_email": "your_email@gmail.com",
+          "sender_name": "Meeting Minutes Bot"
+        },
+        "enabled": false
+      }
+    }
+  }
+}

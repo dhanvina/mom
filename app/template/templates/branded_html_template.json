@@ -1,0 +1,53 @@
+{
+  "name": "Branded HTML Template",
+  "description": "HTML template with branding support",
+  "format_type": "html",
+  "content": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>{meeting_title}</title>\n    <style>\n        body {\n            font-family: {branding.font.value}, Arial, sans-serif;\n            line-height: 1.6;\n            color: #333;\n            margin: 0;\n            padding: 0;\n            background-color: #f5f5f5;\n        }\n        \n        .container {\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n            background-color: #fff;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }\n        \n        header {\n            border-bottom: 2px solid {branding.color.secondary};\n            padding-bottom: 20px;\n            margin-bottom: 20px;\n            background-color: {branding.color.primary};\n            color: white;\n            padding: 20px;\n        }\n        \n        h1 {\n            color: white;\n            margin: 0 0 10px 0;\n        }\n        \n        h2 {\n            color: white;\n            margin: 0 0 10px 0;\n        }\n        \n        h3 {\n            color: {branding.color.primary};\n            border-bottom: 1px solid #eee;\n            padding-bottom: 5px;\n        }\n        \n        .date-time {\n            color: white;\n            font-style: italic;\n        }\n        \n        section {\n            margin-bottom: 20px;\n        }\n        \n        .content {\n            padding-left: 15px;\n        }\n        \n        footer {\n            margin-top: 30px;\n            padding-top: 10px;\n            border-top: 1px solid #eee;\n            color: #7f8c8d;\n            font-size: 0.8em;\n            text-align: center;\n            background-color: {branding.color.secondary};\n            color: white;\n            padding: 10px;\n        }\n        \n        .logo-container {\n            text-align: {branding.logo.position};\n            margin-bottom: 20px;\n        }\n        \n        .logo {\n            max-height: {branding.logo.size};\n            max-width: 100%;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <header>\n            <div class=\"logo-container\">\n                <img src=\"{branding.logo.value}\" alt=\"Logo\" class=\"logo\">\n            </div>\n            <h1>{branding.header.value}</h1>\n            <h2>{meeting_title}</h2>\n            <p class=\"date-time\">{date_time}</p>\n        </header>\n        \n        <section>\n            <h3>Attendees</h3>\n            <div class=\"content\">\n                {attendees}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Agenda</h3>\n            <div class=\"content\">\n                {agenda}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Key Discussion Points</h3>\n            <div class=\"content\">\n                {discussion_points}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Action Items</h3>\n            <div class=\"content\">\n                {action_items}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Decisions Made</h3>\n            <div class=\"content\">\n                {decisions}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Next Steps</h3>\n            <div class=\"content\">\n                {next_steps}\n            </div>\n        </section>\n        \n        <footer>\n            {branding.footer.value}\n        </footer>\n    </div>\n</body>\n</html>",
+  "sections": ["meeting_title", "date_time", "attendees", "agenda", "discussion_points", "action_items", "decisions", "next_steps"],
+  "branding": [
+    {
+      "name": "logo",
+      "type": "logo",
+      "value": "https://example.com/logo.png",
+      "description": "Company logo",
+      "position": "center",
+      "size": "100px"
+    },
+    {
+      "name": "header",
+      "type": "header",
+      "value": "Minutes of Meeting",
+      "description": "Header title"
+    },
+    {
+      "name": "footer",
+      "type": "footer",
+      "value": "© 2023 Example Company. All rights reserved.",
+      "description": "Footer text"
+    },
+    {
+      "name": "color.primary",
+      "type": "color",
+      "value": "#3498db",
+      "description": "Primary color"
+    },
+    {
+      "name": "color.secondary",
+      "type": "color",
+      "value": "#2c3e50",
+      "description": "Secondary color"
+    },
+    {
+      "name": "font",
+      "type": "font",
+      "value": "'Roboto'",
+      "description": "Main font"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "author": "AI-powered MoM Generator"
+  },
+  "language": "en",
+  "translations": {}
+}

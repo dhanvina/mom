@@ -1,0 +1,67 @@
+{
+  "name": "Corporate Template",
+  "description": "Professional corporate template with branding",
+  "format_type": "html",
+  "content": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>{meeting_title} - {branding.company_name.value}</title>\n    <style>\n        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');\n        \n        :root {\n            --primary-color: {branding.color.primary};\n            --secondary-color: {branding.color.secondary};\n            --accent-color: {branding.color.accent};\n            --background-color: #ffffff;\n            --text-color: #333333;\n            --light-gray: #f5f5f5;\n            --border-color: #dddddd;\n        }\n        \n        body {\n            font-family: {branding.font.value}, 'Roboto', Arial, sans-serif;\n            line-height: 1.6;\n            color: var(--text-color);\n            margin: 0;\n            padding: 0;\n            background-color: var(--light-gray);\n        }\n        \n        .container {\n            max-width: 900px;\n            margin: 0 auto;\n            padding: 0;\n            background-color: var(--background-color);\n            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);\n        }\n        \n        .header-container {\n            background-color: var(--primary-color);\n            padding: 20px;\n            color: white;\n        }\n        \n        .logo-container {\n            text-align: {branding.logo.position};\n            padding: 20px;\n            background-color: white;\n            border-bottom: 1px solid var(--border-color);\n        }\n        \n        .logo {\n            max-height: {branding.logo.size};\n            max-width: 100%;\n        }\n        \n        header {\n            padding: 20px;\n        }\n        \n        h1 {\n            color: white;\n            margin: 0 0 10px 0;\n            font-weight: 500;\n        }\n        \n        h2 {\n            color: white;\n            margin: 0 0 10px 0;\n            font-weight: 400;\n        }\n        \n        h3 {\n            color: var(--primary-color);\n            border-bottom: 2px solid var(--accent-color);\n            padding-bottom: 8px;\n            font-weight: 500;\n        }\n        \n        .date-time {\n            color: rgba(255, 255, 255, 0.8);\n            font-style: italic;\n        }\n        \n        .content-container {\n            padding: 20px 40px;\n        }\n        \n        section {\n            margin-bottom: 30px;\n            background-color: white;\n            border-radius: 4px;\n            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);\n            padding: 20px;\n        }\n        \n        .content {\n            padding-left: 15px;\n        }\n        \n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin-bottom: 20px;\n        }\n        \n        th, td {\n            padding: 12px 15px;\n            text-align: left;\n            border-bottom: 1px solid var(--border-color);\n        }\n        \n        th {\n            background-color: var(--secondary-color);\n            color: white;\n        }\n        \n        tr:nth-child(even) {\n            background-color: var(--light-gray);\n        }\n        \n        footer {\n            margin-top: 30px;\n            padding: 20px;\n            color: white;\n            background-color: var(--secondary-color);\n            text-align: center;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <div class=\"logo-container\">\n            <img src=\"{branding.logo.value}\" alt=\"{branding.company_name.value} Logo\" class=\"logo\">\n        </div>\n        \n        <div class=\"header-container\">\n            <header>\n                <h1>{branding.header.value}</h1>\n                <h2>{meeting_title}</h2>\n                <p class=\"date-time\">{date_time}</p>\n            </header>\n        </div>\n        \n        <div class=\"content-container\">\n            <section>\n                <h3>Attendees</h3>\n                <div class=\"content\">\n                    {attendees}\n                </div>\n            </section>\n            \n            <section>\n                <h3>Agenda</h3>\n                <div class=\"content\">\n                    {agenda}\n                </div>\n            </section>\n            \n            <section>\n                <h3>Key Discussion Points</h3>\n                <div class=\"content\">\n                    {discussion_points}\n                </div>\n            </section>\n            \n            <section>\n                <h3>Action Items</h3>\n                <div class=\"content\">\n                    {action_items}\n                </div>\n            </section>\n            \n            <section>\n                <h3>Decisions Made</h3>\n                <div class=\"content\">\n                    {decisions}\n                </div>\n            </section>\n            \n            <section>\n                <h3>Next Steps</h3>\n                <div class=\"content\">\n                    {next_steps}\n                </div>\n            </section>\n        </div>\n        \n        <footer>\n            {branding.footer.value}\n        </footer>\n    </div>\n</body>\n</html>",
+  "sections": ["meeting_title", "date_time", "attendees", "agenda", "discussion_points", "action_items", "decisions", "next_steps"],
+  "branding": [
+    {
+      "name": "logo",
+      "type": "logo",
+      "value": "https://example.com/corporate-logo.png",
+      "description": "Corporate logo",
+      "position": "left",
+      "size": "80px"
+    },
+    {
+      "name": "company_name",
+      "type": "text",
+      "value": "ACME Corporation",
+      "description": "Company name"
+    },
+    {
+      "name": "header",
+      "type": "header",
+      "value": "Minutes of Meeting",
+      "description": "Header title"
+    },
+    {
+      "name": "footer",
+      "type": "footer",
+      "value": "© 2023 ACME Corporation. All rights reserved. Confidential.",
+      "description": "Footer text"
+    },
+    {
+      "name": "color.primary",
+      "type": "color",
+      "value": "#1a5276",
+      "description": "Primary color"
+    },
+    {
+      "name": "color.secondary",
+      "type": "color",
+      "value": "#2c3e50",
+      "description": "Secondary color"
+    },
+    {
+      "name": "color.accent",
+      "type": "color",
+      "value": "#3498db",
+      "description": "Accent color"
+    },
+    {
+      "name": "font",
+      "type": "font",
+      "value": "'Roboto'",
+      "description": "Main font"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "author": "AI-powered MoM Generator",
+    "company": "ACME Corporation",
+    "confidentiality": "Confidential"
+  },
+  "language": "en",
+  "translations": {}
+}
