@@ -6,3 +6,14 @@ logging
 langchain
 langchain_community
 pytest
+SpeechRecognition
+pydub
+moviepy
+PyPDF2
+pytube
+reportlab
+langdetect
+deep-translator
+websockets
+asyncio
+json-diff

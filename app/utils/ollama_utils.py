@@ -1,4 +1,4 @@
- """
+"""
 Ollama management utilities for AI-powered MoM generator.
 
 This module provides utilities for managing Ollama server connections,
@@ -6,10 +6,18 @@ model availability, and model operations using the Ollama Python client.
 """
 
 
-import ollama
-from ollama import Client
 from typing import List
 import logging
+
+try:
+    import ollama
+    from ollama import Client
+    OLLAMA_AVAILABLE = True
+except (ImportError, TypeError) as e:
+    OLLAMA_AVAILABLE = False
+    ollama = None
+    Client = None
+    print(f"Warning: Ollama not available: {e}")
 
 #configure Logging
 logging.basicConfig(level=logging.INFO)
@@ -29,7 +37,10 @@ class OllamaManager:
 
     def __init__(self, model_name: str):
         self.model_name = model_name
-        self.client = Client() # uses default localhost
+        if OLLAMA_AVAILABLE and Client is not None:
+            self.client = Client() # uses default localhost
+        else:
+            self.client = None
         logger.info(f"Initiated OllamaManager for model: {model_name}")
 
     def is_server_running(self) -> bool:
@@ -40,6 +51,10 @@ class OllamaManager:
         Returns:
             bool: True if server is running, False otherwise
         """
+        if not OLLAMA_AVAILABLE or self.client is None:
+            logger.warning("Ollama is not available")
+            return False
+            
         try:
             self.client.list()
             logger.debug("Ollama server is running")
@@ -55,6 +70,10 @@ class OllamaManager:
         Returns:
             List[str]: List of available model names
         """
+        if not OLLAMA_AVAILABLE or ollama is None:
+            logger.warning("Ollama is not available")
+            return []
+            
         try: 
             models = [model.model for model in ollama.list().models]
             logger.info(f"Found {len(models)} available models: {models}")
@@ -97,6 +116,10 @@ class OllamaManager:
         Returns:
             bool: True if successful, False otherwise
         """
+        if not OLLAMA_AVAILABLE or ollama is None:
+            logger.warning("Ollama is not available")
+            return False
+            
         model = self.model_name
         try:
             logger.info(f"Pulling model '{model}' ....")
@@ -106,6 +129,50 @@ class OllamaManager:
         except Exception as e:
             logger.error(f"Error while pulling the model {model}: {e}")
             return False
+    
+    def generate(self, messages: List[dict]) -> str:
+        """
+        Generate a response using the model.
+        
+        Args:
+            messages (List[dict]): List of messages for the conversation
+        
+        Returns:
+            str: Generated response
+        """
+        if not OLLAMA_AVAILABLE or ollama is None:
+            logger.warning("Ollama is not available, returning empty response")
+            return ""
+            
+        try:
+            # Ensure messages are properly formatted
+            formatted_messages = []
+            for msg in messages:
+                if isinstance(msg, dict) and 'role' in msg and 'content' in msg:
+                    # If message is already properly formatted, use it as is
+                    formatted_messages.append(msg)
+                elif hasattr(msg, 'role') and hasattr(msg, 'content'):
+                    # If message is an object with role and content attributes
+                    formatted_messages.append({
+                        'role': msg.role,
+                        'content': msg.content
+                    })
+                else:
+                    # Skip invalid messages
+                    logger.warning(f"Skipping invalid message: {msg}")
+                    continue
+            
+            # If no valid messages, return empty response
+            if not formatted_messages:
+                logger.warning("No valid messages to send to Ollama")
+                return ""
+            
+            # Send to Ollama
+            response = ollama.chat(model=self.model_name, messages=formatted_messages)
+            return response["message"]["content"]
+        except Exception as e:
+            logger.error(f"Error generating response: {e}")
+            return ""
     
     def get_model_info(self, model_name) -> dict:
         """
@@ -117,11 +184,15 @@ class OllamaManager:
         Returns:
             dict: Model information including size, last used, etc.
         """
+        if not OLLAMA_AVAILABLE or ollama is None:
+            logger.warning("Ollama is not available")
+            return {}
+            
         try:
             models = ollama.list().models
             for model_info in models:
-                if model_info.model == self.model:
-                    logger.info(f"Retrived info for model '{self.model}'")
+                if model_info.model == self.model_name:
+                    logger.info(f"Retrieved info for model '{self.model_name}'")
                     return {
                         "name": model_info.name,
                         "model": model_info.model,
@@ -129,10 +200,10 @@ class OllamaManager:
                         "modified_at": model_info.modified_at,
                         "digest": model_info.digest
                     }
-            logger.warning(f"Model '{self.model}' not found in model list")
+            logger.warning(f"Model '{self.model_name}' not found in model list")
             return {}
         except Exception as e:
-            logger.error(f"Error getting model info for '{self.model}': {e}")
+            logger.error(f"Error getting model info for '{self.model_name}': {e}")
             return {}
 
     

@@ -1,0 +1,60 @@
+{
+  "name": "Branded Template",
+  "description": "A template with branding elements",
+  "format_type": "html",
+  "content": "<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>{meeting_title}</title>\n    <style>\n        body {\n            font-family: {branding.font};\n            line-height: 1.6;\n            color: #333;\n            margin: 0;\n            padding: 0;\n            background-color: #f5f5f5;\n        }\n        \n        .container {\n            max-width: 800px;\n            margin: 0 auto;\n            padding: 20px;\n            background-color: #fff;\n            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);\n        }\n        \n        header {\n            border-bottom: 2px solid {branding.secondary_color};\n            padding-bottom: 20px;\n            margin-bottom: 20px;\n        }\n        \n        .logo {\n            max-width: 150px;\n            margin-bottom: 15px;\n        }\n        \n        h1 {\n            color: {branding.secondary_color};\n            margin: 0 0 10px 0;\n        }\n        \n        h2 {\n            color: {branding.primary_color};\n            margin: 0 0 10px 0;\n        }\n        \n        h3 {\n            color: {branding.secondary_color};\n            border-bottom: 1px solid #eee;\n            padding-bottom: 5px;\n        }\n        \n        .date-time {\n            color: #7f8c8d;\n            font-style: italic;\n        }\n        \n        section {\n            margin-bottom: 20px;\n        }\n        \n        .content {\n            padding-left: 15px;\n        }\n        \n        footer {\n            margin-top: 30px;\n            padding-top: 10px;\n            border-top: 1px solid {branding.secondary_color};\n            color: #7f8c8d;\n            font-size: 0.8em;\n            text-align: center;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <header>\n            <img class=\"logo\" src=\"{branding.logo}\" alt=\"Logo\">\n            <h1>{branding.header}</h1>\n            <h2>{meeting_title}</h2>\n            <p class=\"date-time\">{date_time}</p>\n        </header>\n        \n        <section>\n            <h3>Attendees</h3>\n            <div class=\"content\">\n                {attendees}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Agenda</h3>\n            <div class=\"content\">\n                {agenda}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Key Discussion Points</h3>\n            <div class=\"content\">\n                {discussion_points}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Action Items</h3>\n            <div class=\"content\">\n                {action_items}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Decisions Made</h3>\n            <div class=\"content\">\n                {decisions}\n            </div>\n        </section>\n        \n        <section>\n            <h3>Next Steps</h3>\n            <div class=\"content\">\n                {next_steps}\n            </div>\n        </section>\n        \n        <footer>\n            <p>{branding.footer}</p>\n        </footer>\n    </div>\n</body>\n</html>",
+  "sections": [
+    "meeting_title",
+    "date_time",
+    "attendees",
+    "agenda",
+    "discussion_points",
+    "action_items",
+    "decisions",
+    "next_steps"
+  ],
+  "branding": [
+    {
+      "name": "logo",
+      "type": "image",
+      "value": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAABmJLR0QA/wD/AP+gvaeTAAAFJElEQVR4nO2dW2gdRRjHf01qNdW0SbxgxbvVqCCIWlREqFJ9qA/ixQdFfd6oD6JVUaE+KFZR8QIVQcSLFa0XRKu1XkCrVm2tWqPWJk2NJk2qbBqTPD7MHns8OWdnZnd2z5nz/WA/2N1v5pv/zOzszHwzUCgUCoVCoVAoFAqFQqFQKBQKhUKhUCgUCoVCIX+WAncCrwM/AweAv4FfgE+Bh4HFGdqXK5YDrwL/AK0Yx2/AXcCcDOzMBfOBZ4HDNBZC5/gOWJe6tTlgFfAz8UXROQZcnbLNmWYW8BRwlHhCHAe2AjcDFwJzgVOAi4EngJ0J6v0duCRF+zPLBuAg8UQ4CFyXoM6zgB0J6v4LWJmS/ZlkMfAbcYQ4ClydoO6ZwGMJ6v8dODMVL2SQJ4gjRgs4BKxOWP9twJEEbXg0FU9kjHOAPcQT43ng5IRtWAT8kKAdu4HTEvZFprgfvQgt4EfgvITXnwm8kqAte4AlCa+fKRYCu9EL0QIeT3j9WcBrCduxG1iQ8PqZ4m70QrSAX4GzE15/NvBWwnbsTdiOzDEf2I9ehBZwb8Lrz8FNyJO0Y1/CdmSOW9EL0cLNP+YnvP5c4N2E7TiUsB2ZYwawC70QLeCehNefC7yXsB1HErYjk6xBL0QLt/JKMkRNcgKftB25ZDN6IVq4FdLpCa8/D/ggYTuOJWxHJpkG7EAvRAt4MOH15wMfJWzH8YTtyCyXoBejBfyJm9QlYQHwScJ2/JewHZnlefRitHALwSQsBD5N2I7/ErYjs8zEbXrpxHgmYRsWAV8kbEcuT+CTcBl6MVrAX8CZCW1fDHyVsB25PIFPwpPoxWgBW4DTEti9BPg6YRtyeQKfhGnAj+jFaAGbgekxbV4KfJPw+rk8gU/KxcQT5ACwIYa9y4BvE147lyfwcdiEXowWbkV0XgQ7lwPfJbxuLk/g4zAV+Bq9IC3gS9ypeBSWA98nvGYuT+Djci5uJ08rSgt4IIJtK4AfEl4vlyfwSbgfvSAt3LnHmSFtWgn8mPBauTyBT8IU4Av0orRwR7ZhWIXbD0lyrVyewCdhJW4/QytKC7cPMiVg/auBnxJeJ5cn8Em5F70gLdxJe78V1BrgtwTXyOUJfFKmAJ+hF6WFm1/0OgJZC/ye4Pq5PIGPwxriCdLCHdmuT1DfOmBfgmvm8gQ+LvejF6WFm7j3OgJZD+xPcL1cnsDHZQrwKXpRWrgjW90RyAXAgQTXyuUJfBLWEk+QFu4IZF2Xei4EDia4Ti5P4JPyAHpRWrgj2zVd6rkIOJTgGrk8gU/KVGAH8QTZDFzSUcfFwOEE9efyBD4p64gnSAt3ZLu2rY5LgCMJ6s7lCXwaNqEXpYU7sl3TVsdlCevN5Ql8GqYB24knSAt3ZHs5cHnCOnN5Ap+WDcQTJI0jlyfwadmMXpQW+TuBT8104EvKCXxsLiSeILk8gU/LJvSi5PIEPi3TgS8oJ/CxuYh4guTyBD4tD6EXJZcn8GmZAXxOOYGPzTr0ouTyBD4tj6AXJZcn8GmZCXxGOYGPzXr0ouTyBD4tj6IXJZcn8GmZBXxKOYGPzQb0ouTyBD4tj6EXJZcn8GmZDXxCOYGPzUb0ouTyBD4tj6MXJZcn8GmZA3xMOYGPzSb0ouTyBD4tT6AXJZcn8GmZC3xEOYGPzW3oRcnlCXxankQvSi5P4NMyD9hGOYGPze3oRcnlCXxankIvSi5P4NMyH3gP+J9yAh+LO9CLkssT+LQ8jV6UXJ7Ap2UB8D7lBD4Wd6IXJZcn8Gl5Br0ouTyBLxQKhUKhUCgUCoVCoVAoFAqFQqFQKBQKhUKhkA/+BzXP96xP6M5KAAAAAElFTkSuQmCC",
+      "description": "Default logo"
+    },
+    {
+      "name": "primary_color",
+      "type": "color",
+      "value": "#3498db",
+      "description": "Primary color"
+    },
+    {
+      "name": "secondary_color",
+      "type": "color",
+      "value": "#2c3e50",
+      "description": "Secondary color"
+    },
+    {
+      "name": "font",
+      "type": "font",
+      "value": "Arial, sans-serif",
+      "description": "Default font"
+    },
+    {
+      "name": "header",
+      "type": "text",
+      "value": "Minutes of Meeting",
+      "description": "Header text"
+    },
+    {
+      "name": "footer",
+      "type": "text",
+      "value": "Generated by AI-Powered MoM Generator",
+      "description": "Footer text"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "author": "MoM Generator Team"
+  },
+  "language": "en",
+  "translations": {}
+}

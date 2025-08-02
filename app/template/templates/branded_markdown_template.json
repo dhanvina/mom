@@ -1,0 +1,33 @@
+{
+  "name": "Branded Markdown Template",
+  "description": "Markdown template with branding support",
+  "format_type": "markdown",
+  "content": "![{branding.logo.description}]({branding.logo.value})\n\n# {branding.header.value}: {meeting_title}\n\n**Date & Time:** {date_time}\n\n## Attendees\n\n{attendees}\n\n## Agenda\n\n{agenda}\n\n## Key Discussion Points\n\n{discussion_points}\n\n## Action Items\n\n{action_items}\n\n## Decisions Made\n\n{decisions}\n\n## Next Steps\n\n{next_steps}\n\n---\n\n{branding.footer.value}",
+  "sections": ["meeting_title", "date_time", "attendees", "agenda", "discussion_points", "action_items", "decisions", "next_steps"],
+  "branding": [
+    {
+      "name": "logo",
+      "type": "logo",
+      "value": "https://example.com/logo.png",
+      "description": "Company logo"
+    },
+    {
+      "name": "header",
+      "type": "header",
+      "value": "Minutes of Meeting",
+      "description": "Header title"
+    },
+    {
+      "name": "footer",
+      "type": "footer",
+      "value": "© 2023 Example Company. All rights reserved.",
+      "description": "Footer text"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "author": "AI-powered MoM Generator"
+  },
+  "language": "en",
+  "translations": {}
+}
