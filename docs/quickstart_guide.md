@@ -1,9 +1,8 @@
-# MOM Quickstart Guide
+# MinutesAI Quickstart Guide
 
-Welcome to MOM (Modular Object Management)! This guide will help new contributors get up and running quickly with local development, testing, and usage.
+Welcome to MinutesAI! This guide will help new contributors get up and running quickly with local development, testing, and usage.
 
 ## Table of Contents
-
 - [Prerequisites](#prerequisites)
 - [Local Installation](#local-installation)
 - [Testing](#testing)
@@ -18,7 +17,6 @@ Welcome to MOM (Modular Object Management)! This guide will help new contributor
 - [Next Steps](#next-steps)
 
 ## Prerequisites
-
 - Python 3.8 or higher
 - Git
 - pip or conda
@@ -27,26 +25,23 @@ Welcome to MOM (Modular Object Management)! This guide will help new contributor
 ## Local Installation
 
 ### Step 1: Clone the Repository
-
 ```bash
 git clone https://github.com/dhanvina/mom.git
 cd mom
 ```
 
 ### Step 2: Create and Activate Virtual Environment
-
 ```bash
 # Using venv
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Or using conda
-conda create -n mom python=3.8
-conda activate mom
+conda create -n minutesai python=3.8
+conda activate minutesai
 ```
 
 ### Step 3: Install Dependencies
-
 ```bash
 # Install main dependencies
 pip install -r requirements.txt
@@ -59,7 +54,6 @@ pre-commit install
 ```
 
 ### Step 4: Environment Setup
-
 ```bash
 # Copy example config
 cp config/config.example.yaml config/config.yaml
@@ -71,401 +65,346 @@ vim config/config.yaml  # or your preferred editor
 ## Testing
 
 ### Step 1: Run Unit Tests
-
 ```bash
 # Run all tests
 pytest
 
 # Run with coverage
-pytest --cov=mom --cov-report=html
+pytest --cov=minutesai --cov-report=html
 
 # Run specific test file
-pytest tests/test_core.py
+pytest tests/test_extractor.py
+
+# Run tests with verbose output
+pytest -v
 ```
 
 ### Step 2: Run Integration Tests
-
 ```bash
 # Run integration tests
 pytest tests/integration/
 
-# Run with verbose output
-pytest -v tests/integration/
+# Run end-to-end tests
+pytest tests/e2e/
 ```
 
-### Step 3: Verify Installation
-
+### Step 3: Check Code Quality
 ```bash
-# Test CLI
-mom --version
-mom --help
+# Run linters
+flake8 app/
 
-# Test basic functionality
-mom status
+# Check type hints
+mypy app/
+
+# Format code
+black app/ tests/
+
+# Run all pre-commit checks
+pre-commit run --all-files
 ```
 
 ## Usage
 
 ### CLI Interface
 
-The MOM CLI provides powerful command-line tools for object management:
+The MinutesAI CLI provides a command-line interface for processing meeting transcripts.
 
-#### Basic Commands
-
+#### Basic Usage
 ```bash
-# Initialize a new MOM workspace
-mom init
+# Process a single transcript
+python -m app.cli --transcript examples/sample_transcript.txt --output output.txt
 
-# Check system status
-mom status
+# Specify output format
+python -m app.cli --transcript examples/sample_transcript.txt --output output.json --format json
 
-# List available objects
-mom list
-
-# Create a new object
-mom create --type module --name my_module
-
-# Update an existing object
-mom update --id 12345 --field name --value "New Name"
-
-# Delete an object
-mom delete --id 12345
-
-# Search objects
-mom search --query "keyword"
-
-# Export configuration
-mom export --format yaml --output config.yaml
+# Use custom config
+python -m app.cli --transcript examples/sample_transcript.txt --config config/custom.yaml
 ```
 
-#### Advanced Commands
-
+#### CLI Options
 ```bash
-# Batch operations
-mom batch --file operations.json
+python -m app.cli --help
 
-# Sync with remote
-mom sync --remote production
+Options:
+  --transcript PATH   Input transcript file (required)
+  --output PATH       Output file path (default: stdout)
+  --format TEXT       Output format: text, json, html, pdf (default: text)
+  --config PATH       Configuration file path
+  --verbose          Enable verbose logging
+  --version          Show version and exit
+  --help             Show this message and exit
+```
 
-# Generate reports
-mom report --type summary --format html
+#### Examples
+```bash
+# Process audio file
+python -m app.cli --transcript meeting.mp3 --output meeting_minutes.txt
 
-# Backup data
-mom backup --destination ./backups/
+# Generate PDF output
+python -m app.cli --transcript transcript.txt --output minutes.pdf --format pdf
+
+# Process with verbose logging
+python -m app.cli --transcript transcript.txt --output minutes.txt --verbose
 ```
 
 ### Streamlit UI
 
-For a user-friendly web interface, use the Streamlit application:
+The Streamlit UI provides an interactive web interface for MinutesAI.
 
-#### Step 1: Start the Streamlit Server
-
+#### Starting the UI
 ```bash
-# Start with default config
 streamlit run app/streamlit_app.py
-
-# Start with custom config
-streamlit run app/streamlit_app.py -- --config config/custom.yaml
-
-# Start on custom port
-streamlit run app/streamlit_app.py --server.port 8502
 ```
 
-#### Step 2: Access the Web Interface
+The app will open in your default browser at `http://localhost:8501`.
 
-1. Open your browser to `http://localhost:8501`
-2. Navigate through the sidebar menu:
-   - **Dashboard**: Overview of system status
-   - **Object Manager**: Create, read, update, delete objects
-   - **Search**: Advanced search functionality
-   - **Configuration**: System settings
-   - **Reports**: Generate and view reports
-   - **Help**: Documentation and tutorials
+#### Features
+- **File Upload**: Drag-and-drop or browse for transcript files
+- **Real-time Processing**: Watch progress as MinutesAI extracts information
+- **Interactive Results**: View and edit extracted meeting minutes
+- **Multiple Formats**: Export results in various formats
+- **Configuration**: Adjust settings without editing config files
 
-#### Key Features
-
-- **Interactive Object Creation**: Form-based object creation with validation
-- **Real-time Search**: Dynamic filtering and search with live results
-- **Visual Reports**: Charts and graphs for data visualization
-- **Bulk Operations**: Upload CSV files for batch processing
-- **Export Functionality**: Download data in various formats (CSV, JSON, YAML)
+#### UI Workflow
+1. Upload your transcript file (supported: .txt, .doc, .docx, .mp3, .wav)
+2. Configure extraction settings (optional)
+3. Click "Process" to generate meeting minutes
+4. Review and edit the extracted information
+5. Export results in your preferred format
 
 ## Development Workflow
 
 ### Pre-commit Hooks
 
-The project uses pre-commit hooks to ensure code quality:
+The project uses pre-commit hooks to ensure code quality before commits.
 
+#### Installed Hooks
+- `black`: Code formatting
+- `flake8`: Linting
+- `mypy`: Type checking
+- `isort`: Import sorting
+- `trailing-whitespace`: Remove trailing whitespace
+- `end-of-file-fixer`: Ensure files end with newline
+
+#### Running Pre-commit
 ```bash
-# Install hooks (run once after cloning)
-pre-commit install
+# Run on staged files (automatic on commit)
+pre-commit run
 
-# Run hooks manually
+# Run on all files
 pre-commit run --all-files
 
-# Update hook versions
+# Update hooks
 pre-commit autoupdate
 ```
 
-**Enabled Hooks:**
-- **Black**: Code formatting
-- **isort**: Import sorting
-- **flake8**: Linting
-- **mypy**: Type checking
-- **bandit**: Security scanning
-- **pytest**: Run tests
-
 ### CI Checks
 
-Continuous Integration runs automatically on pull requests:
+All pull requests must pass CI checks before merging:
 
-**GitHub Actions Workflows:**
-- **Test Suite**: Runs on Python 3.8, 3.9, 3.10, 3.11
-- **Code Quality**: Linting, formatting, type checking
-- **Security Scan**: Dependency vulnerability checking
-- **Documentation**: Build and deploy docs
-- **Performance**: Benchmark critical paths
+#### Automated Checks
+- **Tests**: All unit and integration tests must pass
+- **Coverage**: Minimum 80% code coverage required
+- **Linting**: No flake8 violations
+- **Type Checking**: No mypy errors
+- **Security**: Bandit security scan
+- **Dependencies**: Safety check for vulnerable packages
 
-**Local CI Simulation:**
-
+#### Local CI Simulation
 ```bash
-# Run the full CI suite locally
-make ci
+# Run the same checks as CI
+./scripts/ci_checks.sh
 
-# Or run individual components
-make test
-make lint
-make security-check
-make docs-build
+# Or manually:
+pytest --cov=minutesai --cov-report=term-missing
+flake8 app/
+mypy app/
+bandit -r app/
+safety check
 ```
 
 ## Sample Configuration
 
-Here's a complete sample configuration file (`config/config.yaml`):
+Here's a sample configuration file (`config/config.yaml`):
 
 ```yaml
-# MOM Configuration File
-# Copy this to config/config.yaml and customize as needed
+# MinutesAI Configuration
 
-# Database Configuration
-database:
-  type: "sqlite"  # Options: sqlite, postgresql, mysql
-  host: "localhost"
-  port: 5432
-  name: "mom_db"
-  user: "mom_user"
-  password: "secure_password"
-  
-  # SQLite specific (when type: sqlite)
-  path: "data/mom.db"
-  
-  # Connection pool settings
-  pool_size: 10
-  max_overflow: 20
-  pool_timeout: 30
-
-# Logging Configuration
-logging:
-  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  file: "logs/mom.log"
-  max_size_mb: 100
-  backup_count: 5
-  
-  # Component-specific logging levels
-  loggers:
-    "mom.core": "DEBUG"
-    "mom.api": "INFO"
-    "mom.database": "WARNING"
-
-# API Configuration
-api:
-  host: "0.0.0.0"
-  port: 8000
+# Application settings
+app:
+  name: MinutesAI
+  version: "1.0.0"
   debug: false
-  
-  # Security settings
-  secret_key: "your-secret-key-here"
-  access_token_expire_minutes: 30
-  
-  # CORS settings
-  cors:
-    origins: ["http://localhost:3000", "http://localhost:8501"]
-    methods: ["GET", "POST", "PUT", "DELETE"]
-    headers: ["*"]
 
-# Streamlit Configuration
-streamlit:
-  title: "MOM - Modular Object Management"
-  theme:
-    primary_color: "#FF6B6B"
-    background_color: "#FFFFFF"
-    secondary_background_color: "#F0F2F6"
-    text_color: "#262730"
-  
-  # Page settings
-  page_config:
-    layout: "wide"
-    sidebar_state: "expanded"
-    menu_items:
-      "Get Help": "https://github.com/dhanvina/mom/issues"
-      "About": "MOM v1.0.0 - Modular Object Management System"
+# LLM settings
+llm:
+  provider: ollama
+  model: llama2
+  temperature: 0.7
+  max_tokens: 2000
 
-# Object Management Settings
-objects:
-  # Default object types
-  types:
-    - "module"
-    - "component"
-    - "service"
-    - "resource"
-  
-  # Validation rules
-  validation:
-    name_pattern: "^[a-zA-Z0-9_-]+$"
-    max_name_length: 100
-    required_fields: ["name", "type"]
-  
-  # Storage settings
-  storage:
-    base_path: "data/objects"
-    backup_enabled: true
-    backup_interval_hours: 24
+# Extraction settings
+extraction:
+  sections:
+    - meeting_title
+    - date_time
+    - attendees
+    - agenda
+    - discussion_points
+    - action_items
+    - decisions
+    - next_steps
 
-# Performance Settings
-performance:
-  cache:
-    enabled: true
-    ttl_seconds: 3600
-    max_size: 1000
-  
-  # Pagination
-  pagination:
-    default_page_size: 50
-    max_page_size: 1000
-  
-  # Background tasks
-  tasks:
-    cleanup_interval_hours: 6
-    max_concurrent_tasks: 5
+# Output settings
+output:
+  default_format: text
+  include_timestamp: true
+  include_metadata: true
 
-# Monitoring and Metrics
-monitoring:
-  enabled: true
-  metrics_endpoint: "/metrics"
-  health_check_endpoint: "/health"
-  
-  # Prometheus settings
-  prometheus:
-    enabled: false
-    port: 8001
-    
-  # Custom metrics
-  custom_metrics:
-    - "object_creation_rate"
-    - "api_response_time"
-    - "database_query_duration"
+# Logging settings
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  handlers:
+    console:
+      enabled: true
+    file:
+      enabled: true
+      path: logs/minutesai.log
+      max_bytes: 10485760  # 10MB
+      backup_count: 5
 
-# Feature Flags
-features:
-  experimental_api: false
-  advanced_search: true
-  bulk_operations: true
-  real_time_updates: false
-  audit_logging: true
+# Module-specific logging levels
+loggers:
+  minutesai.core: INFO
+  minutesai.extractor: DEBUG
+  minutesai.formatter: INFO
+  minutesai.analyzer: INFO
 ```
 
 ## System Flow Diagram
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│                 │    │                 │    │                 │
-│   User Input    │───▶│   CLI / UI      │───▶│   Core Engine   │
-│                 │    │                 │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                                │                        │
-                                │                        ▼
-                                │                ┌─────────────────┐
-                                │                │                 │
-                                │                │  Object Manager │
-                                │                │                 │
-                                │                └─────────────────┘
-                                │                        │
-                                │                        ▼
-                                │                ┌─────────────────┐
-                                │                │                 │
-                                │                │   Validation    │
-                                │                │    Engine       │
-                                │                │                 │
-                                │                └─────────────────┘
-                                │                        │
-                                │                        ▼
-                                │                ┌─────────────────┐
-                                │                │                 │
-                                └───────────────▶│   Database      │
-                                                 │   Layer         │
-                                                 │                 │
-                                                 └─────────────────┘
-                                                         │
-                                                         ▼
-                                                 ┌─────────────────┐
-                                                 │                 │
-                                                 │   Storage       │
-                                                 │   (SQLite/      │
-                                                 │   PostgreSQL)   │
-                                                 │                 │
-                                                 └─────────────────┘
-
-Data Flow:
-1. User interacts via CLI or Streamlit UI
-2. Commands processed by Core Engine
-3. Object Manager handles CRUD operations
-4. Validation Engine ensures data integrity
-5. Database Layer manages persistence
-6. Results returned to user interface
-
-Key Components:
-• CLI: Command-line interface for programmatic access
-• Streamlit UI: Web-based graphical interface
-• Core Engine: Central processing and business logic
-• Object Manager: Handles object lifecycle operations
-• Validation Engine: Ensures data consistency and rules
-• Database Layer: Abstraction for different storage backends
+┌─────────────────┐
+│  Input Sources  │
+│  (.txt, .doc,   │
+│   .mp3, .wav)   │
+└────────┬────────┘
+         │
+         v
+┌─────────────────┐
+│ TranscriptLoader│
+│  - Load files   │
+│  - Preprocess   │
+│  - Normalize    │
+└────────┬────────┘
+         │
+         v
+┌─────────────────┐
+│MinutesAI        │
+│  Extractor      │
+│  - LangChain    │
+│  - Ollama LLM   │
+│  - Extract info │
+└────────┬────────┘
+         │
+         v
+┌─────────────────┐
+│   Analyzers     │
+│  - Efficiency   │
+│  - Sentiment    │
+│  - Action Items │
+└────────┬────────┘
+         │
+         v
+┌─────────────────┐
+│MinutesAI        │
+│  Formatter      │
+│  - Text/JSON    │
+│  - HTML/PDF     │
+│  - Templates    │
+└────────┬────────┘
+         │
+         v
+┌─────────────────┐
+│  Output Files   │
+│  (various       │
+│   formats)      │
+└─────────────────┘
 ```
 
 ## Next Steps
 
 After completing this quickstart guide:
 
-1. **Read the Architecture Documentation**: Learn about system design and components
-   - [Architecture Overview](architecture.md)
-   - [API Documentation](api.md)
-   - [Database Schema](database.md)
+1. **Read the Documentation**
+   - [Architecture Overview](./architecture.md)
+   - [Modules Overview](./modules_overview.md)
+   - [API Reference](./api.md)
 
-2. **Explore Advanced Features**:
-   - Custom object types and validation rules
-   - Plugin development and extensions
-   - Performance optimization techniques
-   - Advanced search and filtering
+2. **Explore Examples**
+   - Check the `examples/` directory for sample transcripts
+   - Try processing different input formats
+   - Experiment with different output formats
 
-3. **Contributing to the Project**:
-   - Check the [Contributing Guidelines](../CONTRIBUTING.md)
-   - Review [Code Style Guide](code-style.md)
-   - Browse [Open Issues](https://github.com/dhanvina/mom/issues)
-   - Submit your first Pull Request
+3. **Contribute**
+   - Read [CONTRIBUTING.md](../CONTRIBUTING.md)
+   - Check [open issues](https://github.com/dhanvina/mom/issues)
+   - Submit your first pull request
 
-4. **Community and Support**:
-   - Join discussions in [GitHub Discussions](https://github.com/dhanvina/mom/discussions)
-   - Report bugs via [GitHub Issues](https://github.com/dhanvina/mom/issues)
-   - Follow updates in the [Changelog](../CHANGELOG.md)
-
-5. **Deployment and Production**:
-   - [Production Deployment Guide](deployment.md)
-   - [Monitoring and Observability](monitoring.md)
-   - [Security Best Practices](security.md)
+4. **Join the Community**
+   - Star the repository
+   - Join discussions
+   - Share your feedback
 
 ---
 
-**Happy coding with MOM!** 🚀
+## Troubleshooting
 
-For questions or support, please reach out via [GitHub Issues](https://github.com/dhanvina/mom/issues) or check our [FAQ](faq.md).
+### Common Issues
+
+#### Issue: Import errors
+```bash
+# Solution: Ensure you're in the project root and venv is activated
+cd /path/to/mom
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+#### Issue: Ollama connection error
+```bash
+# Solution: Make sure Ollama is running
+# Start Ollama service
+ollama serve
+
+# In another terminal, pull the model
+ollama pull llama2
+```
+
+#### Issue: Tests failing
+```bash
+# Solution: Install dev dependencies and check test database
+pip install -r requirements-dev.txt
+pytest -v  # Run with verbose output to see specific failures
+```
+
+#### Issue: Pre-commit hooks failing
+```bash
+# Solution: Run the hooks manually to see errors
+pre-commit run --all-files
+
+# Fix issues and try again
+black app/ tests/
+flake8 app/
+```
+
+### Getting Help
+
+- **Documentation**: Check the `docs/` directory
+- **Issues**: [Report bugs](https://github.com/dhanvina/mom/issues)
+- **Discussions**: [Ask questions](https://github.com/dhanvina/mom/discussions)
+- **Email**: Contact maintainers
+
+---
+
+Happy coding with MinutesAI! 🚀
