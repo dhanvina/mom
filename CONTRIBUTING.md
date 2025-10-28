@@ -1,10 +1,9 @@
 # Contributing to mom
-
 Thank you for your interest in contributing to this project! We welcome contributions from the community and appreciate your efforts to improve the project.
 
 ## Table of Contents
-
 - [Getting Started](#getting-started)
+- [Pre-commit Hooks Setup](#pre-commit-hooks-setup)
 - [How to Contribute](#how-to-contribute)
 - [Code Style Guidelines](#code-style-guidelines)
 - [Testing Requirements](#testing-requirements)
@@ -16,7 +15,6 @@ Thank you for your interest in contributing to this project! We welcome contribu
 ## Getting Started
 
 ### Fork the Repository
-
 1. Fork the repository by clicking the "Fork" button at the top right of the repository page
 2. Clone your forked repository to your local machine:
    ```bash
@@ -29,9 +27,7 @@ Thank you for your interest in contributing to this project! We welcome contribu
    ```
 
 ### Create a Branch
-
 Always create a new branch for your work. Never commit directly to the `main` branch.
-
 ```bash
 git checkout -b feature/your-feature-name
 ```
@@ -43,265 +39,205 @@ Branch naming conventions:
 - `docs/` - for documentation changes
 - `refactor/` - for code refactoring
 
-## How to Contribute
+## Pre-commit Hooks Setup
 
+This project uses pre-commit hooks to ensure code quality and consistency. These hooks automatically run checks before each commit to catch issues early.
+
+### Installing Pre-commit
+
+1. **Install pre-commit** (if you haven't already):
+   ```bash
+   # Using pip
+   pip install pre-commit
+   
+   # Using conda
+   conda install -c conda-forge pre-commit
+   
+   # Using homebrew (macOS)
+   brew install pre-commit
+   ```
+
+2. **Install the git hook scripts**:
+   ```bash
+   pre-commit install
+   ```
+
+3. **Verify installation**:
+   ```bash
+   pre-commit --version
+   ```
+
+### What the Pre-commit Hooks Do
+
+Our `.pre-commit-config.yaml` includes several tools that will automatically run on your code:
+
+- **Black**: Automatically formats Python code to ensure consistent style
+- **isort**: Sorts and organizes import statements
+- **Flake8**: Checks for Python syntax errors and style issues
+- **Bandit**: Scans for common security issues
+- **MyPy**: Performs static type checking
+- **General hooks**: Check for trailing whitespace, file endings, YAML syntax, etc.
+
+### Running Pre-commit Hooks Manually
+
+- **Run on all files**:
+  ```bash
+  pre-commit run --all-files
+  ```
+
+- **Run on staged files only** (what happens during commit):
+  ```bash
+  pre-commit run
+  ```
+
+- **Run a specific hook**:
+  ```bash
+  pre-commit run black
+  pre-commit run flake8
+  ```
+
+### Automatic Execution
+
+Once installed, pre-commit hooks run automatically:
+- **Before each commit**: Hooks run on staged files
+- **If any hook fails**: The commit is blocked until issues are fixed
+- **Auto-fixes**: Some hooks (like Black, isort) automatically fix issues
+
+### Skipping Hooks (Not Recommended)
+
+In rare cases where you need to skip hooks:
+```bash
+# Skip all hooks
+git commit -m "your message" --no-verify
+
+# Skip specific hooks
+SKIP=flake8,mypy git commit -m "your message"
+```
+
+**Note**: Skipping hooks is discouraged as it bypasses quality checks.
+
+### Troubleshooting
+
+- **Hook installation issues**: Try `pre-commit clean` then `pre-commit install`
+- **Outdated hooks**: Run `pre-commit autoupdate` to update hook versions
+- **Cache issues**: Use `pre-commit clean` to clear the cache
+
+## How to Contribute
 1. **Find or create an issue**: Before starting work, check if an issue exists for what you want to do. If not, create one to discuss your proposed changes.
 2. **Fork and branch**: Fork the repository and create a feature branch from `main`.
-3. **Make your changes**: Implement your feature or fix with clear, commented code.
-4. **Write/modify tests**: Ensure your changes are covered by tests (see [Testing Requirements](#testing-requirements)).
-5. **Test locally**: Run all tests locally to ensure nothing is broken (see [Running Tests](#running-tests)).
-6. **Commit your changes**: Use clear, descriptive commit messages.
-7. **Push to your fork**: Push your branch to your forked repository.
-8. **Open a pull request**: Submit a PR to the main repository with a clear description.
+3. **Set up pre-commit hooks**: Follow the [Pre-commit Hooks Setup](#pre-commit-hooks-setup) guide above.
+4. **Make your changes**: Implement your feature or fix with clear, commented code.
+5. **Write/modify tests**: Ensure your changes are covered by tests (see [Testing Requirements](#testing-requirements)).
+6. **Test locally**: Run all tests locally to ensure nothing is broken (see [Running Tests](#running-tests)).
+7. **Run pre-commit checks**: Ensure all pre-commit hooks pass before committing.
+8. **Commit your changes**: Use clear, descriptive commit messages.
+9. **Push to your fork**: Push your branch to your forked repository.
+10. **Submit a pull request**: Create a PR against the main repository's `main` branch.
+11. **Respond to feedback**: Address any review comments promptly.
 
 ## Code Style Guidelines
 
-Please follow these coding standards to maintain consistency across the project:
-
-### General Guidelines
-
-- Write clean, readable, and maintainable code
-- Use meaningful variable and function names
-- Keep functions small and focused on a single task
-- Add comments for complex logic, but strive for self-documenting code
-- Remove commented-out code and debug statements before committing
-
-### Language-Specific Guidelines
-
-**Python:**
-- Follow PEP 8 style guide
-- Use 4 spaces for indentation
-- Maximum line length of 88 characters (Black formatter standard)
+### Python Code Style
+We follow PEP 8 with some modifications:
+- Use Black for formatting (configured in `.pre-commit-config.yaml`)
+- Maximum line length: 88 characters (Black's default)
+- Use isort for import organization
 - Use type hints where appropriate
 
-**JavaScript/TypeScript:**
-- Follow ESLint configuration provided in the project
-- Use 2 spaces for indentation
-- Use semicolons
-- Prefer `const` over `let`, avoid `var`
-
-### Formatting
-
-- Run the project's formatter before committing (if applicable)
-- Ensure there are no trailing whitespaces
-- End files with a newline character
+### General Practices
+- Write clear, self-documenting code
+- Add comments for complex logic
+- Use descriptive variable and function names
+- Follow existing patterns in the codebase
 
 ## Testing Requirements
 
-**All new features and bug fixes must include tests.**
-
 ### Writing Tests
-
-- Write unit tests for individual functions and components
-- Write integration tests for feature workflows
-- Ensure tests are deterministic and don't depend on external services
-- Use descriptive test names that explain what is being tested
-- Include both positive and negative test cases
+- Write unit tests for new features
+- Maintain or improve test coverage
 - Test edge cases and error conditions
+- Use descriptive test names
 
-### Modifying Existing Tests
-
-- If you modify existing code, update corresponding tests
-- Don't delete tests without justification
-- If tests become obsolete, document why in your PR
-
-### Test Coverage
-
-- Aim for at least 80% code coverage for new code
-- Check coverage reports after running tests
-- Don't decrease overall project coverage with your changes
+### Test Structure
+```python
+def test_descriptive_name():
+    # Arrange
+    # Set up test data
+    
+    # Act
+    # Execute the code being tested
+    
+    # Assert
+    # Verify the results
+```
 
 ## Pull Request Process
 
 ### Before Submitting
+1. ✅ All tests pass locally
+2. ✅ Pre-commit hooks pass
+3. ✅ Code follows style guidelines
+4. ✅ Documentation is updated (if applicable)
+5. ✅ Commit messages are clear
 
-1. **Sync with upstream**: Ensure your branch is up-to-date with the main repository
-   ```bash
-   git fetch upstream
-   git rebase upstream/main
-   ```
-2. **Run all tests**: Verify all tests pass locally
-3. **Run linters**: Fix any linting errors
-4. **Review your changes**: Do a self-review of your code
+### PR Description
+Your PR should include:
+- **What**: Description of changes
+- **Why**: Reason for changes
+- **How**: Approach taken
+- **Testing**: How you tested the changes
+- **Related Issues**: Link to relevant issues
 
-### Submitting Your PR
-
-1. **Create a descriptive title**: Use a clear, concise title that summarizes the change
-2. **Fill out the PR template**: Provide all requested information
-3. **Reference related issues**: Use "Fixes #123" or "Closes #123" syntax (see [Issue References](#issue-references))
-4. **Describe your changes**: Explain what you changed and why
-5. **Add screenshots/demos**: If applicable, include visual evidence of changes
-6. **Mark as draft**: If the PR is not ready for review, mark it as a draft
-
-### PR Review Process
-
-- **Be responsive**: Respond to reviewer comments promptly
-- **Be open to feedback**: Accept constructive criticism gracefully
-- **Make requested changes**: Address all reviewer feedback
-- **Request re-review**: After making changes, request another review
-- **CI must pass**: All CI checks must pass before merging
-- **Approvals required**: At least one approval from a maintainer is required
-
-### After Approval
-
-- A maintainer will merge your PR
-- Your branch will be deleted automatically
-- You can safely delete your local branch after merging
+### Review Process
+- PRs require at least one approving review
+- Address all review comments
+- Keep PRs focused and reasonably sized
+- Be responsive to feedback
 
 ## Issue References
 
-When working on issues, reference them properly in commits and PRs:
-
-### In Commit Messages
-
-```bash
-git commit -m "Fix authentication bug (#123)"
-git commit -m "Add user profile feature (relates to #456)"
-```
-
-### In Pull Requests
-
-Use GitHub keywords to automatically link and close issues:
-
-- `Fixes #123` - Closes the issue when PR is merged
-- `Closes #123` - Same as "Fixes"
-- `Resolves #123` - Same as "Fixes"
-- `Relates to #123` - Links to issue without closing it
-- `Part of #123` - Indicates partial implementation
-
-Multiple issues can be referenced:
-```
-Fixes #123, fixes #456, relates to #789
-```
+When referencing issues in commits or PRs:
+- `Fixes #123` - Closes the issue automatically
+- `Closes #123` - Also closes the issue
+- `Related to #123` - Links without closing
+- `Addresses #123` - Links without closing
 
 ## Community Standards
 
 ### Code of Conduct
+- Be respectful and inclusive
+- Welcome newcomers
+- Provide constructive feedback
+- Focus on the code, not the person
 
-We are committed to providing a welcoming and inclusive environment for all contributors.
-
-#### Our Standards
-
-**Positive behaviors include:**
-- Using welcoming and inclusive language
-- Being respectful of differing viewpoints and experiences
-- Gracefully accepting constructive criticism
-- Focusing on what is best for the community
-- Showing empathy towards other community members
-- Helping newcomers get started
-
-**Unacceptable behaviors include:**
-- Use of sexualized language or imagery
-- Trolling, insulting/derogatory comments, and personal attacks
-- Public or private harassment
-- Publishing others' private information without permission
-- Other conduct which could reasonably be considered inappropriate
-
-#### Enforcement
-
-- Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, issues, and other contributions that do not align with these standards
-- Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers
-- All complaints will be reviewed and investigated promptly and fairly
-
-### Respectful Communication
-
-- **Be patient**: Not everyone has the same level of experience
-- **Be constructive**: Provide helpful feedback, not just criticism
-- **Be humble**: Everyone makes mistakes; learn from them
-- **Be explicit**: Clearly communicate your intentions and expectations
-- **Be considerate**: Your work will be used by others, and you depend on others' work
+### Communication
+- Use clear, professional language
+- Be patient with contributors
+- Ask questions when unclear
+- Share knowledge and help others
 
 ## Running Tests
 
-### Running Tests Locally
-
-Before submitting your PR, ensure all tests pass on your local machine.
-
-#### Prerequisites
-
-Install dependencies:
+### Run All Tests
 ```bash
-npm install
-# or
-pip install -r requirements.txt
-# or
-yarn install
+pytest
 ```
 
-#### Run All Tests
-
+### Run Specific Test File
 ```bash
-npm test
-# or
-python -m pytest
-# or
-yarn test
+pytest tests/test_specific.py
 ```
 
-#### Run Specific Tests
-
+### Run with Coverage
 ```bash
-npm test -- path/to/test/file
-# or
-pytest path/to/test/file.py
+pytest --cov=mom --cov-report=html
 ```
 
-#### Run Tests with Coverage
-
+### Run in Verbose Mode
 ```bash
-npm test -- --coverage
-# or
-pytest --cov=src tests/
+pytest -v
 ```
 
-#### Run Linters
+---
 
-```bash
-npm run lint
-# or
-flake8 .
-black --check .
-mypy .
-```
-
-### Continuous Integration (CI)
-
-All pull requests automatically trigger CI pipelines that run:
-
-1. **Automated tests**: All test suites across different environments
-2. **Linting**: Code style and quality checks
-3. **Coverage checks**: Ensure test coverage meets minimum thresholds
-4. **Build verification**: Ensure the project builds successfully
-
-#### CI Pipeline Details
-
-- **Test environments**: Tests run on multiple OS versions and language versions
-- **Required checks**: All CI checks must pass before merging
-- **Status checks**: You can view CI results directly in your PR
-- **Failure handling**: If CI fails, review the logs, fix issues, and push updates
-
-#### Viewing CI Results
-
-1. Navigate to your pull request
-2. Scroll to the "Checks" section at the bottom
-3. Click on failed checks to view detailed logs
-4. Fix issues locally and push changes to re-trigger CI
-
-### Debugging Test Failures
-
-- **Read error messages carefully**: They usually indicate what went wrong
-- **Run tests locally**: Reproduce failures on your machine
-- **Check test logs**: Review full output for context
-- **Isolate the problem**: Run only the failing test
-- **Ask for help**: If stuck, ask in the PR comments or discussions
-
-## Questions?
-
-If you have questions or need help:
-
-1. Check existing issues and discussions
-2. Read the project documentation
-3. Open a new issue with the "question" label
-4. Reach out to maintainers in discussions
-
-Thank you for contributing to mom! 🎉
+Thank you for contributing to mom! Your efforts help make this project better for everyone. 🎉
