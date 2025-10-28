@@ -1,9 +1,8 @@
 # Modules Overview
 
-This document provides a comprehensive overview of all Python modules in the MOM (Meeting Organization Manager) application. For architectural details, see [architecture.md](./architecture.md).
+This document provides a comprehensive overview of all Python modules in the MinutesAI application. For architectural details, see [architecture.md](./architecture.md).
 
 ## Table of Contents
-
 - [Core Module](#core-module)
 - [Analyzer Module](#analyzer-module)
 - [Extractor Module](#extractor-module)
@@ -15,21 +14,18 @@ This document provides a comprehensive overview of all Python modules in the MOM
 ---
 
 ## Core Module
-
 **Location:** [`app/core/`](../app/core/)
 
 ### Overview
-The core module contains the main application logic and entry point for the MOM application.
+The core module contains the main application logic and entry point for the MinutesAI application.
 
 ### Files and Classes
-
 | File | Classes/Functions | Description |
 |------|------------------|-------------|
-| [`main_app.py`](../app/core/main_app.py) | `MOMApp`, `run_app()`, `setup_logging()` | Main application class and startup functions |
+| [`main_app.py`](../app/core/main_app.py) | `MinutesAIApp`, `run_app()`, `setup_logging()` | Main application class and startup functions |
 
 ### Public API
-
-#### `MOMApp` Class
+#### `MinutesAIApp` Class
 - **Purpose:** Main application orchestrator
 - **Key Methods:**
   - `initialize()` - Sets up application components
@@ -53,174 +49,187 @@ The core module contains the main application logic and entry point for the MOM 
 ---
 
 ## Analyzer Module
-
 **Location:** [`app/analyzer/`](../app/analyzer/)
 
 ### Overview
 Handles analysis of meeting content including efficiency metrics, sentiment analysis, and action item extraction.
 
 ### Files and Classes
-
 | File | Classes/Functions | Description |
 |------|------------------|-------------|
 | [`efficiency_analyzer.py`](../app/analyzer/efficiency_analyzer.py) | `EfficiencyAnalyzer`, `MeetingMetrics` | Analyzes meeting efficiency and generates metrics |
-| [`sentiment_analyzer.py`](../app/analyzer/sentiment_analyzer.py) | `SentimentAnalyzer`, `EmotionDetector` | Natural language sentiment analysis |
-| [`action_item_analyzer.py`](../app/analyzer/action_item_analyzer.py) | `ActionItemExtractor`, `TaskClassifier` | Extracts and classifies action items |
-| [`topic_analyzer.py`](../app/analyzer/topic_analyzer.py) | `TopicModeler`, `KeywordExtractor` | Topic modeling and keyword extraction |
+| [`sentiment_analyzer.py`](../app/analyzer/sentiment_analyzer.py) | `SentimentAnalyzer`, `SentimentResults` | Performs sentiment analysis on meeting content |
+| [`action_item_detector.py`](../app/analyzer/action_item_detector.py) | `ActionItemDetector`, `ActionItem` | Identifies and extracts action items from transcripts |
 
 ### Public API
-
 #### `EfficiencyAnalyzer` Class
-- **Purpose:** Analyze meeting efficiency and productivity
+- **Purpose:** Calculate meeting efficiency metrics
 - **Key Methods:**
-  - `analyze_meeting(transcript)` - Generate efficiency metrics
-  - `calculate_participation_ratio()` - Measure participant engagement
-  - `detect_time_wasters()` - Identify inefficient segments
+  - `analyze()` - Computes efficiency scores
+  - `generate_report()` - Creates detailed efficiency report
+  - `get_recommendations()` - Provides actionable suggestions
 
 #### `SentimentAnalyzer` Class
 - **Purpose:** Analyze emotional tone and sentiment
 - **Key Methods:**
-  - `analyze_sentiment(text)` - Get sentiment scores
-  - `detect_emotions(text)` - Identify specific emotions
-  - `track_mood_changes()` - Monitor sentiment evolution
+  - `analyze_transcript()` - Overall sentiment analysis
+  - `analyze_by_speaker()` - Per-speaker sentiment breakdown
+  - `detect_conflict_points()` - Identifies potential disagreements
+
+#### `ActionItemDetector` Class
+- **Purpose:** Extract and structure action items
+- **Key Methods:**
+  - `extract_action_items()` - Identifies action items
+  - `assign_owners()` - Maps action items to responsible parties
+  - `set_priorities()` - Determines task priorities
 
 ### Dependencies
-- **Standard Library:** `re`, `collections`, `statistics`
-- **External:** `nltk`, `spacy`, `transformers`, `scikit-learn`
-- **Internal:** `utils.text_processing`, `utils.ml_helpers`
+- **Standard Library:** `re`, `datetime`, `collections`
+- **External:** `numpy`, `sklearn`, `transformers`
+- **Internal:** `utils.text_processing`, `utils.nlp_helpers`
 
 ### Extension Points
-- Custom analysis algorithms via plugin interface
-- Configurable sentiment models
-- Custom metric calculation functions
-- Integration with external AI services
+- Custom metric calculators
+- Pluggable sentiment models
+- Action item classification rules
 
 ---
 
 ## Extractor Module
-
 **Location:** [`app/extractor/`](../app/extractor/)
 
 ### Overview
-Extraction layer for processing various media types including audio, video, text, and documents.
+Handles extraction of structured meeting minutes sections from raw transcripts using AI/LLM integration.
 
 ### Files and Classes
-
 | File | Classes/Functions | Description |
 |------|------------------|-------------|
-| [`audio_extractor.py`](../app/extractor/audio_extractor.py) | `AudioExtractor`, `TranscriptionService` | Audio processing and speech-to-text conversion |
-| [`video_extractor.py`](../app/extractor/video_extractor.py) | `VideoExtractor`, `FrameAnalyzer` | Video processing and visual content extraction |
-| [`text_extractor.py`](../app/extractor/text_extractor.py) | `TextExtractor`, `DocumentParser` | Text and document content extraction |
-| [`metadata_extractor.py`](../app/extractor/metadata_extractor.py) | `MetadataExtractor`, `FileInfoParser` | File metadata and properties extraction |
+| [`minutesai_extractor.py`](../app/extractor/minutesai_extractor.py) | `MinutesAIExtractor`, `ExtractionResult` | Main extraction engine using LangChain |
+| [`transcript_loader.py`](../app/extractor/transcript_loader.py) | `TranscriptLoader`, `LoadedTranscript` | Loads and preprocesses various transcript formats |
+| [`prompt_templates.py`](../app/extractor/prompt_templates.py) | `PromptManager`, Template constants | Manages AI prompts for extraction |
 
 ### Public API
-
-#### `AudioExtractor` Class
-- **Purpose:** Process audio files and extract transcriptions
+#### `MinutesAIExtractor` Class
+- **Purpose:** Extract structured meeting minutes using AI
 - **Key Methods:**
-  - `extract_audio(file_path)` - Extract audio from various formats
-  - `transcribe_speech(audio_data)` - Convert speech to text
-  - `identify_speakers()` - Speaker diarization
-  - `extract_audio_features()` - Audio characteristic analysis
+  - `extract()` - Main extraction method
+  - `extract_section()` - Extract specific section
+  - `validate_extraction()` - Quality check results
+  - `retry_failed_sections()` - Retry failed extractions
 
-#### `VideoExtractor` Class
-- **Purpose:** Process video content and extract relevant information
+#### `TranscriptLoader` Class
+- **Purpose:** Load and preprocess transcripts
 - **Key Methods:**
-  - `extract_frames(video_path)` - Extract key frames
-  - `detect_slides()` - Identify presentation slides
-  - `extract_text_from_video()` - OCR on video content
+  - `load()` - Load transcript from file
+  - `preprocess()` - Clean and normalize text
+  - `detect_speakers()` - Identify speakers if present
+  - `segment_transcript()` - Break into logical sections
+
+#### `PromptManager` Class
+- **Purpose:** Manage AI prompt templates
+- **Key Methods:**
+  - `get_prompt()` - Retrieve prompt by name
+  - `customize_prompt()` - Modify prompts dynamically
+  - `validate_template()` - Check prompt structure
 
 ### Dependencies
-- **Standard Library:** `os`, `tempfile`, `subprocess`
-- **External:** `ffmpeg-python`, `whisper`, `opencv-python`, `pytesseract`
-- **Internal:** `utils.file_handlers`, `utils.audio_utils`
+- **Standard Library:** `json`, `pathlib`, `typing`
+- **External:** `langchain`, `ollama`, `docx`, `pdfplumber`
+- **Internal:** `utils.file_handlers`, `utils.validators`
 
 ### Extension Points
-- Support for additional media formats
-- Custom transcription services integration
-- Pluggable audio/video processing pipelines
-- External API integration for enhanced processing
+- Custom prompt templates
+- Alternative LLM providers
+- Additional file format support
+- Custom preprocessing pipelines
 
 ---
 
 ## Formatter Module
-
 **Location:** [`app/formatter/`](../app/formatter/)
 
 ### Overview
-Formatting and output generation layer supporting multiple output formats including HTML, PDF, Word, and Markdown.
+Formats extracted meeting minutes data into various output formats (text, JSON, HTML, PDF, etc.).
 
 ### Files and Classes
-
 | File | Classes/Functions | Description |
 |------|------------------|-------------|
-| [`base_formatter.py`](../app/formatter/base_formatter.py) | `BaseFormatter`, `FormatterInterface` | Abstract base class for all formatters |
-| [`html_formatter.py`](../app/formatter/html_formatter.py) | `HTMLFormatter`, `HTMLTemplate` | HTML output generation |
-| [`pdf_formatter.py`](../app/formatter/pdf_formatter.py) | `PDFFormatter`, `PDFGenerator` | PDF document generation |
-| [`word_formatter.py`](../app/formatter/word_formatter.py) | `WordFormatter`, `DocxGenerator` | Microsoft Word document generation |
-| [`markdown_formatter.py`](../app/formatter/markdown_formatter.py) | `MarkdownFormatter`, `MDGenerator` | Markdown output generation |
-| [`json_formatter.py`](../app/formatter/json_formatter.py) | `JSONFormatter`, `DataSerializer` | JSON data export |
-| [`template_manager.py`](../app/formatter/template_manager.py) | `TemplateManager`, `ThemeLoader` | Template and theme management |
+| [`minutesai_formatter.py`](../app/formatter/minutesai_formatter.py) | `MinutesAIFormatter`, `FormatterConfig` | Main formatting orchestrator |
+| [`text_formatter.py`](../app/formatter/text_formatter.py) | `TextFormatter` | Plain text output formatting |
+| [`json_formatter.py`](../app/formatter/json_formatter.py) | `JSONFormatter` | JSON output formatting |
+| [`html_formatter.py`](../app/formatter/html_formatter.py) | `HTMLFormatter` | HTML output with templates |
+| [`pdf_formatter.py`](../app/formatter/pdf_formatter.py) | `PDFFormatter` | PDF generation |
 
 ### Public API
-
-#### `BaseFormatter` Class
-- **Purpose:** Abstract base for all output formatters
+#### `MinutesAIFormatter` Class
+- **Purpose:** Format meeting minutes to desired output format
 - **Key Methods:**
-  - `format(data)` - Abstract method for formatting data
-  - `validate_data(data)` - Input validation
-  - `apply_styling()` - Apply formatting styles
+  - `format()` - Main formatting method
+  - `format_as_text()` - Text output
+  - `format_as_json()` - JSON output
+  - `format_as_html()` - HTML output
+  - `format_as_pdf()` - PDF output
+  - `save_to_file()` - Write formatted output to file
 
-#### `HTMLFormatter` Class
-- **Purpose:** Generate HTML output with styling
-- **Key Methods:**
-  - `generate_report(meeting_data)` - Create HTML meeting report
-  - `apply_template(template_name)` - Apply HTML template
-  - `add_interactive_elements()` - Add JavaScript interactions
+#### Format-Specific Formatters
+Each format has dedicated formatter class:
+- **TextFormatter**: Simple, readable text format
+- **JSONFormatter**: Structured JSON with schema validation
+- **HTMLFormatter**: Styled HTML with customizable templates
+- **PDFFormatter**: Professional PDF documents with branding
 
 ### Dependencies
-- **Standard Library:** `json`, `xml.etree.ElementTree`, `datetime`
-- **External:** `jinja2`, `weasyprint`, `python-docx`, `reportlab`
-- **Internal:** `utils.template_helpers`, `utils.styling`
+- **Standard Library:** `json`, `io`, `datetime`
+- **External:** `jinja2`, `reportlab`, `markdown2`
+- **Internal:** `utils.template_engine`, `utils.validators`
 
 ### Extension Points
-- Custom output format support
-- Template system extensibility
-- Custom styling and theming
-- Integration with external document services
+- Custom output formats
+- Template customization
+- Brand/theme support
+- Export plugins
 
 ---
 
 ## Utils Module
-
 **Location:** [`app/utils/`](../app/utils/)
 
 ### Overview
-Utility functions and helper classes used across the application.
+Provides utility functions and classes used across the application.
 
 ### Files and Classes
-
 | File | Classes/Functions | Description |
 |------|------------------|-------------|
-| [`audio_utils.py`](../app/utils/audio_utils.py) | `AudioProcessor`, `format_converter()` | Audio processing utilities |
-| [`config_loader.py`](../app/utils/config_loader.py) | `ConfigLoader`, `SettingsManager` | Configuration management |
-| [`file_handlers.py`](../app/utils/file_handlers.py) | `FileManager`, `PathValidator` | File system operations |
-| [`logger.py`](../app/utils/logger.py) | `Logger`, `setup_logger()` | Logging configuration |
-| [`text_processing.py`](../app/utils/text_processing.py) | `TextProcessor`, `sanitize_text()` | Text processing utilities |
-| [`validators.py`](../app/utils/validators.py) | `DataValidator`, `validate_input()` | Input validation functions |
+| [`file_handlers.py`](../app/utils/file_handlers.py) | `FileHandler`, `FileValidator` | File I/O operations and validation |
+| [`validators.py`](../app/utils/validators.py) | Various validation functions | Data validation utilities |
+| [`config_manager.py`](../app/utils/config_manager.py) | `ConfigManager`, `Config` | Configuration management |
+| [`logger.py`](../app/utils/logger.py) | `Logger`, logging utilities | Application logging setup |
+| [`text_processing.py`](../app/utils/text_processing.py) | `TextProcessor` | Advanced text processing capabilities |
 
 ### Public API
+#### `FileHandler` Class
+- **Purpose:** Handle file I/O operations
+- **Key Methods:**
+  - `read_file()` - Read file contents
+  - `write_file()` - Write data to file
+  - `validate_path()` - Validate file paths
+  - `detect_encoding()` - Detect file encoding
 
-#### Utility Functions
-- `format_converter(input_format, output_format)` - Convert between audio formats
-- `sanitize_text(text)` - Clean and normalize text input
-- `validate_input(data, schema)` - Validate data against schema
-- `setup_logger(name, level)` - Configure application logging
+#### `ConfigManager` Class
+- **Purpose:** Manage application configuration
+- **Key Methods:**
+  - `load_config()` - Load configuration files
+  - `get_setting()` - Retrieve specific settings
+  - `update_setting()` - Modify configuration
+  - `validate_config()` - Check configuration validity
 
-#### Helper Classes
-- `ConfigLoader` - Centralized configuration management
-- `FileManager` - File system operations with error handling
-- `TextProcessor` - Advanced text processing capabilities
+#### `TextProcessor` Class
+- **Purpose:** Advanced text manipulation
+- **Key Methods:**
+  - `clean_text()` - Remove unwanted characters
+  - `normalize_whitespace()` - Standardize spacing
+  - `extract_entities()` - Named entity recognition
+  - `summarize()` - Generate text summaries
 
 ### Dependencies
 - **Standard Library:** `pathlib`, `logging`, `configparser`, `re`
@@ -236,7 +245,6 @@ Utility functions and helper classes used across the application.
 ---
 
 ## Configuration
-
 **Location:** [`app/main.py`](../app/main.py)
 
 ### Overview
@@ -257,7 +265,7 @@ Main application entry point and global configuration.
 ## Extension Points
 
 ### Plugin System
-The MOM application supports extensibility through several mechanisms:
+The MinutesAI application supports extensibility through several mechanisms:
 
 #### 1. Custom Analyzers
 - Extend `BaseAnalyzer` class in the analyzer module
@@ -289,7 +297,6 @@ Extension points are configurable through:
 ---
 
 ## Related Documentation
-
 - [Architecture Overview](./architecture.md) - System architecture and design patterns
 - [API Documentation](./api.md) - REST API endpoints and usage
 - [Installation Guide](./installation.md) - Setup and deployment instructions
@@ -298,7 +305,6 @@ Extension points are configurable through:
 ---
 
 ## Contributing
-
 When adding new modules:
 1. Follow the established package structure
 2. Implement appropriate base classes and interfaces
