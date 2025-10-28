@@ -1,223 +1,225 @@
 # MOM (Meeting Output Manager) Architecture
 
-## Table of Contents
-- [High-Level Architecture](#high-level-architecture)
-- [Core Components](#core-components)
-- [Data Flow](#data-flow)
-- [Component Interactions](#component-interactions)
-- [Extensibility Points](#extensibility-points)
-- [Technology Stack](#technology-stack)
-- [Security & Performance](#security--performance)
+This document provides a comprehensive overview of the MOM system architecture, including components, data flow, and technical infrastructure.
 
-## High-Level Architecture
+## Overview
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                           MainApp                               │
-│  ┌─────────────────┐  ┌──────────────────┐  ┌───────────────┐ │
-│  │  User Interface │  │  Configuration   │  │   Logging     │ │
-│  │     Layer       │  │    Manager       │  │   System      │ │
-│  └─────────────────┘  └──────────────────┘  └───────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Processing Pipeline                       │
-│  ┌───────────────┐  ┌──────────────┐  ┌───────────────────────┐ │
-│  │TranscriptLoader│──│ MoMExtractor │──│     MoMFormatter      │ │
-│  │   (Input)     │  │ (Processing) │  │      (Output)         │ │
-│  └───────────────┘  └──────────────┘  └───────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────┐
-│              External Systems & Analytics                      │
-│  ┌─────────────┐    ┌──────────────┐    ┌─────────────────┐   │
-│  │Integrations │    │  Analytics   │    │  Output Storage │   │
-│  │  (APIs)     │    │  Dashboard   │    │  & Distribution │   │
-│  └─────────────┘    └──────────────┘    └─────────────────┘   │
-└─────────────────────────────────────────────────────────────────┘
-```
+MOM is designed as a modular, scalable system for processing meeting transcripts and generating structured Minutes of Meeting (MoM) documents. The architecture follows microservices principles with clear separation of concerns.
 
-## Core Components
+## System Components
 
-### 1. TranscriptLoader
-**Purpose:** Input layer responsible for loading and preprocessing meeting transcripts
+### 1. Core Processing Engine
 
-**Responsibilities:**
-- Load transcripts from various sources (files, APIs, live streams)
-- Validate input formats (SRT, VTT, JSON, plain text)
-- Perform initial data sanitization and normalization
-- Handle multiple input channels simultaneously
-- Provide unified transcript format for downstream processing
+The heart of the MOM system responsible for transcript processing and content extraction.
 
-**Key Features:**
-- Multi-format support
-- Batch processing capabilities
-- Real-time stream processing
-- Error handling and recovery
-- Metadata extraction
+#### TranscriptLoader
+- **Purpose**: Loads and preprocesses meeting transcripts
+- **Supported Formats**: .txt, .doc, .docx, .mp3, .wav
+- **Features**: 
+  - File format detection and validation
+  - Text preprocessing and cleaning
+  - Audio transcription (via Whisper/speech-to-text)
+  - Encoding detection and normalization
 
-### 2. MoMExtractor
-**Purpose:** Core processing engine that extracts meaningful information from transcripts
+#### MoMExtractor
+- **Purpose**: Extracts structured MoM sections using AI
+- **Technology**: LangChain + Ollama integration
+- **Capabilities**:
+  - Natural Language Processing
+  - Context-aware section identification
+  - Entity recognition (attendees, action items, decisions)
+  - Sentiment analysis and key point extraction
 
-**Responsibilities:**
-- Identify key discussion points and decisions
-- Extract action items and assignments
-- Detect participant roles and contributions
-- Summarize meeting content
-- Classify topics and themes
-- Generate structured data from unstructured transcripts
+#### MoMFormatter
+- **Purpose**: Formats extracted data into various output formats
+- **Output Formats**: Text, JSON, HTML, PDF, Markdown
+- **Features**:
+  - Template-based formatting
+  - Custom styling and branding
+  - Multi-language support
+  - Export customization
 
-**Key Features:**
-- NLP-powered content analysis
-- Speaker identification and diarization
-- Action item detection with confidence scoring
-- Topic modeling and categorization
-- Sentiment analysis
-- Configurable extraction rules
+### 2. User Interfaces
 
-### 3. MoMFormatter
-**Purpose:** Output formatting engine that transforms extracted data into various formats
+#### CLI Interface
+- **Technology**: Python Click framework
+- **Features**:
+  - Command-line processing
+  - Batch operations
+  - Configuration management
+  - Progress indicators and verbose logging
 
-**Responsibilities:**
-- Generate meeting minutes in multiple formats
-- Create action item summaries
-- Format output according to organizational templates
-- Apply styling and branding
-- Generate shareable reports
-- Customize output based on audience
+#### Streamlit Web UI
+- **Technology**: Streamlit framework
+- **Features**:
+  - File upload interface
+  - Real-time processing status
+  - Interactive result viewing
+  - Configuration panel
+  - Export functionality
 
-**Key Features:**
-- Template-based formatting
-- Multiple output formats (Markdown, PDF, HTML, JSON)
-- Custom styling support
-- Automated report generation
-- Version control for outputs
-- Export to various platforms
+### 3. Data Storage
 
-### 4. MainApp
-**Purpose:** Central orchestration layer and user interface
+#### Configuration Management
+- **Format**: YAML-based configuration files
+- **Scope**: Application settings, AI model parameters, output templates
+- **Features**: Environment-specific configs, validation schemas
 
-**Responsibilities:**
-- Coordinate component interactions
-- Manage application lifecycle
-- Provide user interface for configuration and monitoring
-- Handle user authentication and authorization
-- Manage system configuration
-- Provide logging and monitoring
+#### Processing Cache
+- **Technology**: File-based caching system
+- **Purpose**: Store intermediate processing results
+- **Benefits**: Faster reprocessing, recovery from failures
 
-**Key Features:**
-- Web-based dashboard
-- Real-time processing status
-- Configuration management UI
-- User role management
-- System health monitoring
-- Batch job scheduling
+#### Output Storage
+- **Location**: Configurable output directories
+- **Organization**: Timestamp-based folder structure
+- **Retention**: Configurable cleanup policies
 
-### 5. Integrations
-**Purpose:** External system connectivity and API management
-
-**Responsibilities:**
-- Connect to calendar systems (Google Calendar, Outlook)
-- Integrate with collaboration tools (Slack, Teams, Discord)
-- Push notifications and alerts
-- Sync with project management tools
-- Export to document management systems
-- webhook and API endpoints
-
-**Key Features:**
-- OAuth2 authentication for external services
-- Rate limiting and retry logic
-- Real-time webhooks
-- Bulk data synchronization
-- Custom API integrations
-- Event-driven notifications
-
-### 6. Analytics
-**Purpose:** Data analysis and insights generation
-
-**Responsibilities:**
-- Track meeting effectiveness metrics
-- Analyze participation patterns
-- Generate productivity insights
-- Monitor system performance
-- Create usage dashboards
-- Provide business intelligence
-
-**Key Features:**
-- Real-time analytics dashboard
-- Historical trend analysis
-- Custom KPI tracking
-- Automated report generation
-- Data visualization
-- Performance metrics
-
-## Data Flow
+## Data Flow Architecture
 
 ```
-┌─────────────┐    ┌──────────────┐    ┌─────────────────┐
-│   Meeting   │───▶│ Transcript   │───▶│   Raw Data      │
-│   Audio/    │    │   Loader     │    │  Validation     │
-│   Video     │    │              │    │                 │
-└─────────────┘    └──────────────┘    └─────────────────┘
-                                                 │
-                                                 ▼
-┌─────────────┐    ┌──────────────┐    ┌─────────────────┐
-│ Formatted   │◀───│     MoM      │◀───│   Processed     │
-│  Output     │    │  Formatter   │    │     Data        │
-│             │    │              │    │                 │
-└─────────────┘    └──────────────┘    └─────────────────┘
-       │                                         ▲
-       │           ┌──────────────┐             │
-       │          │     MoM      │─────────────┘
-       │          │  Extractor   │
-       │          │              │
-       │          └──────────────┘
-       ▼                   ▲
-┌─────────────┐           │
-│External     │           │
-│Systems &    │───────────┘
-│Analytics    │
-└─────────────┘
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│                 │    │                 │    │                 │
+│   User Input    │───▶│   CLI / UI      │───▶│   Core Engine   │
+│                 │    │                 │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │                        │
+                                │                        ▼
+                                │                ┌─────────────────┐
+                                │                │                 │
+                                │                │  Object Manager │
+                                │                │                 │
+                                │                └─────────────────┘
+                                │                        │
+                                │                        ▼
+                                │                ┌─────────────────┐
+                                │                │                 │
+                                │                │   Validation    │
+                                │                │    Engine       │
+                                │                │                 │
+                                │                └─────────────────┘
+                                │                        │
+                                │                        ▼
+                                │                ┌─────────────────┐
+                                │                │                 │
+                                └───────────────▶│   Database      │
+                                                 │   Layer         │
+                                                 │                 │
+                                                 └─────────────────┘
+                                                         │
+                                                         ▼
+                                                 ┌─────────────────┐
+                                                 │                 │
+                                                 │   Storage       │
+                                                 │   (SQLite/      │
+                                                 │   PostgreSQL)   │
+                                                 │                 │
+                                                 └─────────────────┘
 ```
 
-**Data Flow Steps:**
-1. **Input Stage**: TranscriptLoader receives meeting data from various sources
-2. **Validation**: Raw data is validated, cleaned, and normalized
-3. **Processing**: MoMExtractor analyzes content and extracts meaningful information
-4. **Formatting**: MoMFormatter transforms processed data into desired output formats
-5. **Distribution**: Integrations component distributes output to external systems
-6. **Analytics**: Analytics component collects metrics and generates insights
+### Processing Workflow
 
-## Component Interactions
+1. **Input Reception**: User provides transcript via CLI or UI
+2. **File Validation**: System validates file format and accessibility
+3. **Preprocessing**: Text cleaning, normalization, and preparation
+4. **AI Processing**: LangChain+Ollama extracts structured sections
+5. **Post-processing**: Data validation and enhancement
+6. **Formatting**: Output generation in requested format
+7. **Delivery**: Results provided to user interface
 
-| Component | Interacts With | Interface Type | Data Exchanged |
-|-----------|---------------|----------------|----------------|
-| MainApp | All Components | REST API / Events | Configuration, Status, Commands |
-| TranscriptLoader | MoMExtractor | Data Pipeline | Normalized Transcripts |
-| MoMExtractor | MoMFormatter | Data Pipeline | Extracted Information |
-| MoMFormatter | Integrations | REST API | Formatted Reports |
-| Integrations | Analytics | Event Stream | Usage Metrics |
-| Analytics | MainApp | WebSocket | Real-time Insights |
+## AI Integration Architecture
 
-## Extensibility Points
+### LangChain Integration
+- **Role**: Orchestrates AI processing pipeline
+- **Components**: 
+  - Prompt templates for consistent AI queries
+  - Chain composition for multi-step processing
+  - Memory management for context retention
+  - Error handling and retry logic
 
-### 1. Plugin Architecture
-- **Input Plugins**: Add support for new transcript sources
-- **Processing Plugins**: Extend extraction capabilities with custom algorithms
-- **Output Plugins**: Create new formatting and distribution options
-- **Integration Plugins**: Connect to additional external services
+### Ollama Integration
+- **Role**: Provides local AI model execution
+- **Benefits**:
+  - Privacy-first processing (no external API calls)
+  - Customizable model selection
+  - Consistent performance
+  - Cost-effective scaling
 
-### 2. Configuration Hooks
-- **Template System**: Custom meeting minute templates
-- **Rule Engine**: Configurable extraction and formatting rules
-- **Workflow Engine**: Custom processing pipelines
-- **Notification System**: Customizable alerts and notifications
+### Prompt Engineering
+- **Templates**: Structured prompts for each MoM section
+- **Context Management**: Maintains conversation context
+- **Output Validation**: Ensures consistent response format
+- **Performance Optimization**: Efficient token usage
 
-### 3. API Extensions
-- **REST API**: Full CRUD operations for all components
-- **GraphQL API**: Flexible data querying
+## Configuration Architecture
+
+### Hierarchical Configuration
+```
+config/
+├── default.yaml       # Base configuration
+├── development.yaml   # Dev environment overrides
+├── production.yaml    # Prod environment overrides
+└── local.yaml        # User-specific settings (git-ignored)
+```
+
+### Configuration Sections
+- **Database**: Connection and performance settings
+- **Logging**: Output levels and destinations
+- **API**: Server configuration and security
+- **AI Models**: Model selection and parameters
+- **Processing**: Batch sizes and timeout settings
+- **UI**: Interface customization and themes
+
+## Security Architecture
+
+### Data Privacy
+- **Local Processing**: All AI operations run locally
+- **No External APIs**: Sensitive data never leaves user environment
+- **Encryption**: Optional encryption for stored outputs
+- **Access Control**: File system permissions for data protection
+
+### Input Validation
+- **File Type Validation**: Whitelist of allowed formats
+- **Size Limits**: Configurable maximum file sizes
+- **Content Scanning**: Basic malware detection
+- **Sanitization**: Input cleaning and normalization
+
+### Error Handling
+- **Graceful Degradation**: System continues with partial failures
+- **Detailed Logging**: Comprehensive error tracking
+- **User Feedback**: Clear error messages and recovery suggestions
+- **Automatic Recovery**: Retry logic for transient failures
+
+## Performance Architecture
+
+### Scalability Considerations
+- **Horizontal Scaling**: Multiple processing instances
+- **Resource Management**: CPU and memory optimization
+- **Caching Strategy**: Intelligent result caching
+- **Load Balancing**: Distributed processing queues
+
+### Optimization Strategies
+- **Lazy Loading**: On-demand resource initialization
+- **Streaming Processing**: Handle large files efficiently
+- **Parallel Processing**: Concurrent section extraction
+- **Memory Management**: Efficient garbage collection
+
+## Extension Points
+
+### 1. Processing Extensions
+- **Custom Extractors**: Add new content extraction algorithms
+- **Format Parsers**: Support additional input formats
+- **AI Models**: Integration with alternative AI providers
+- **Validation Rules**: Custom business logic validation
+
+### 2. Output Extensions
+- **Custom Formatters**: New output format support
+- **Template Engine**: Custom formatting templates
+- **Export Integrations**: Direct integration with external systems
+- **Notification Systems**: Alert mechanisms for completion
+
+### 3. Interface Extensions
+- **API Endpoints**: RESTful API for external integration
 - **Webhook Support**: Real-time event notifications
 - **SDK Support**: Language-specific development kits
 
@@ -263,11 +265,15 @@
 ---
 
 ## Related Documentation
+
+- [Quickstart Guide](quickstart_guide.md) - Get up and running quickly with installation, testing, and usage
 - [README](../README.md) - Project overview and quick start guide
 - [CONTRIBUTING](../CONTRIBUTING.md) - Development guidelines and contribution process
 - [SECURITY](../SECURITY.md) - Security policies and vulnerability reporting
+- [Modules Overview](modules_overview.md) - Detailed module information
 
 ## Version History
+
 - v1.0.0 - Initial architecture design
 - v1.1.0 - Added Analytics component
 - v1.2.0 - Enhanced Integrations with webhook support
