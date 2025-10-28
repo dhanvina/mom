@@ -1,4 +1,4 @@
-# AI-Powered Minutes of Meeting (MoM) Generator
+# AI-Powered Minutes of Meeting Generator
 
 ## Overview
 
