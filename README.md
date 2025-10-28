@@ -1,12 +1,12 @@
-# AI-Powered Minutes of Meeting Generator
+# AI-Powered MinutesAI Generator
 
 ## Overview
-This project is an AI-powered Minutes of Meeting (MoM) generator that leverages [LangChain](https://python.langchain.com/docs/) and [Ollama](https://ollama.com/) to automatically extract and structure meeting summaries from raw transcripts. Designed with Object-Oriented Programming (OOP) principles, it ensures maintainability, scalability, and ease of collaboration for teams.
+This project is an AI-powered meeting minutes generator (MinutesAI) that leverages [LangChain](https://python.langchain.com/docs/) and [Ollama](https://ollama.com/) to automatically extract and structure meeting summaries from raw transcripts. Designed with Object-Oriented Programming (OOP) principles, it ensures maintainability, scalability, and ease of collaboration for teams.
 
 ---
 
 ## Features
-- **Automated MoM Extraction:** Generate structured MoM documents from meeting transcripts using AI.
+- **Automated Meeting Minutes Extraction:** Generate structured meeting minutes documents from meeting transcripts using AI.
 - **Standardized Output:** Consistent sections: Meeting Title, Date & Time, Attendees, Agenda, Key Discussion Points, Action Items, Decisions Made, Next Steps.
 - **Input:** Supports .txt, .doc, .mp3
 - **Output** Supports .pdf
@@ -17,23 +17,22 @@ This project is an AI-powered Minutes of Meeting (MoM) generator that leverages 
 
 ## Architecture
 ```
-TranscriptLoader  -->  MoMExtractor  -->  MoMFormatter  -->  MainApp
-      |                 |                  |                |
-  (Loads &         (Extracts MoM        (Formats         (Orchestrates
-  preprocesses)    sections using      structured        the workflow)
-  transcript)      LangChain+Ollama)   output)
+TranscriptLoader  -->  MinutesAIExtractor  -->  MinutesAIFormatter  -->  MinutesAIApp
+      |                     |                          |                      |
+  (Loads &             (Extracts meeting          (Formats              (Orchestrates
+  preprocesses)        minutes sections using     structured             the workflow)
+  transcript)          LangChain+Ollama)          output)
 ```
 
 ### Main Classes
 - **TranscriptLoader:** Loads and preprocesses meeting transcripts.
-- **MoMExtractor:** Uses LangChain and Ollama to extract MoM sections via prompt templates.
-- **MoMFormatter:** Formats extracted data into text, JSON, or HTML.
-- **MainApp:** Orchestrates the workflow and user interface.
+- **MinutesAIExtractor:** Uses LangChain and Ollama to extract meeting minutes sections via prompt templates.
+- **MinutesAIFormatter:** Formats extracted data into text, JSON, or HTML.
+- **MinutesAIApp:** Orchestrates the workflow and user interface.
 
 ---
 
 ## Quick Start
-
 🚀 **New contributors**: Get up and running quickly with our comprehensive [Quickstart Guide](docs/quickstart_guide.md)
 
 The quickstart guide covers:
@@ -49,40 +48,45 @@ The quickstart guide covers:
 ### Prerequisites
 - Python 3.8+
 - [Ollama](https://ollama.com/) installed and running
-- [LangChain](https://python.langchain.com/docs/) Python package
+- Install required model:
+```bash
+ollama pull llama2
+```
 
 ### Installation
+1. Clone the repository:
 ```bash
-# Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/dhanvina/mom.git
 cd mom
+```
 
-# Create and activate a virtual environment
+2. Create and activate virtual environment:
+```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-# Install dependencies
+3. Install dependencies:
+```bash
 pip install -r requirements.txt
+```
+
+4. Install pre-commit hooks (optional but recommended):
+```bash
+pre-commit install
 ```
 
 ---
 
 ## Usage
-1. **Prepare your meeting transcript** (e.g., `meeting.txt`).
-2. **Run the CLI tool:**
-   ```bash
-   python main.py --input meeting.txt --output mom_output.txt
-   ```
-3. **View your structured Minutes of Meeting.**
 
-### CLI Options
-- `--input`: Path to the meeting transcript file
-- `--output`: Path for the generated MoM file
-- `--format`: Output format (txt, json, html, pdf)
-- `--verbose`: Enable detailed logging
+### CLI Usage
+```bash
+python -m app.cli --transcript path/to/transcript.txt --output path/to/output.txt
+```
 
 ### Streamlit UI
-For a user-friendly web interface:
+Launch the Streamlit web interface:
 ```bash
 streamlit run app/streamlit_app.py
 ```
@@ -90,7 +94,6 @@ streamlit run app/streamlit_app.py
 ---
 
 ## Documentation
-
 - [Quickstart Guide](docs/quickstart_guide.md) - Get started quickly
 - [Architecture Documentation](docs/architecture.md) - System design and components
 - [Modules Overview](docs/modules_overview.md) - Detailed module information
@@ -115,8 +118,8 @@ pre-commit run --all-files
 
 ### Project Structure
 ```
-mom/
-├── src/mom/             # Main source code
+minutesai/
+├── src/minutesai/       # Main source code
 │   ├── core/           # Core business logic
 │   ├── cli/            # Command-line interface
 │   └── ui/             # Streamlit UI components
